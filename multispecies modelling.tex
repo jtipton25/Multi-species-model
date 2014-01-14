@@ -1,0 +1,183 @@
+\documentclass[fleqn]{article}
+\setlength{\topmargin}{0in} \setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in} \setlength{\headheight}{0in}
+\setlength{\headsep}{0in} \setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\mathindent}{0pt}
+
+\usepackage[fleqn]{amsmath}
+\usepackage{dsfont}
+\usepackage{graphicx}
+\usepackage{url}
+%\usepackage{chicago}
+\usepackage{natbib}
+\def\bm#1{\mbox{\boldmath $#1$}}
+ 
+\title{Multispecies Model}
+\author{Kristin Broms, Viviana Ruiz-Guiterrez, John Tipton}
+\date{\today}
+%
+\begin{document}
+%
+\maketitle
+%
+\section{Introduction and motivation}
+%
+\section{Model of one season detection}
+%
+\subsection{Modelling assumptions}
+%
+\begin{itemize}
+  \item No seasonality
+  \item 
+\end{itemize}
+%
+\subsection{Data model}
+%
+For $i = 1, \ldots, n$ sites,  $k = 1, \ldots, K$ observed species (out of a total of $\Omega$ species), and for $j = 1, \ldots, J$ revisits at each site
+%
+\begin{align*}
+  y_{ik} & = 
+    \begin{cases}
+      0 & \mbox{if } Z_{ik} = 0\\
+      \mbox{Binom}(J, p_k) & \mbox{if } Z_{ik} = 1\\
+    \end{cases}
+\end{align*}
+%
+\subsection{Process}
+%
+\begin{align*}
+  Z_{ik} & = 
+  \begin{cases}
+    0 & \mbox{if } W_k = 0\\
+    \mbox{Bern}(\Psi_k) & \mbox{if } W_k = 1\\
+  \end{cases}\\
+  p_k & \sim \mbox{Beta}(\alpha_p, \beta_p)\\
+  \Psi_k & \sim \mbox{Beta}(\alpha_\Psi, \beta_\Psi)\\
+  W_k & \sim \mbox{Bern}(\lambda)\\
+\end{align*}
+%
+\subsection{Parameter}
+%
+\begin{align*}
+  \alpha_p & \sim \mbox{Gamma}(\alpha_{\alpha_p}, \beta_{\alpha_p})\\
+  \beta_p & \sim \mbox{Gamma}(\alpha_{\beta_p}, \beta_{\beta_p})\\
+  \alpha_\Psi & \sim \mbox{Gamma}(\alpha_{\alpha_\Psi}, \beta_{\alpha_\Psi})\\
+  \beta_\Psi & \sim \mbox{Gamma}(\alpha_{\beta_\Psi}, \beta_{\beta_\Psi})\\
+  \lambda & \sim \mbox{Beta}(\alpha_\lambda, \beta_\lambda)\\
+\end{align*}
+%
+\section{Ideas}
+%
+\begin{itemize}
+  \item model $\Psi_k = f(\Psi_{ - k}) +$ randomness and species interaction
+  \item $
+  Z_{ik}  = 
+  \begin{cases}
+    0 & \mbox{if } W_k = 0\\
+    \mbox{Bern}(\Psi_k) & \mbox{if } W_k = 1\\
+  \end{cases}$ where $W_k$ represents "ghost species"
+  \item Let $\Omega$ represent the total number of possible species, $\Omega \geq K$
+  \item $W_k \sim \mbox{Bern}(\lambda) \Leftrightarrow k \sim \mbox{Binom}(\Omega, \lambda) \Leftrightarrow \sum_{k = 1}^\Omega W_k = K$
+  \item Goal: estimate $\Psi_k$ and predict $\Omega$
+\end{itemize}
+%
+\section{Posterior}
+%
+\begin{align*}
+  [\bm{Z}, \bm{p}, \bm{\Psi}, \bm{W}, \alpha_p, \beta_p, \alpha_\Psi, \beta_\Psi, \lambda | \bm{y}, J] & \propto \prod_{i = 1}^n \prod_{k = 1}^\Omega [y_{ik} | J, p_k]^{Z_{ik}} I\{y_{ik} = 0 \}^{(1 -  Z_{ik})} [Z_{ik} | \Psi_k]^{W_k} I\{Z_{ik} = 0 \}^{(1 -  W_k)}\\
+  & \times [p_k | \alpha_p, \beta_p] [\Psi_k | \alpha_\Psi, \beta_\Psi] [W_k | \lambda] [\alpha_p] [\beta_p] [\alpha_\Psi] [\beta_\Psi] [\lambda]
+\end{align*}
+%
+\section{Full conditionals}
+%
+\subsection{$Z_{ik}$}
+%
+For $y_{ik} = 1$, $Z_{ik} = 1$. For $y_{ik} = 0$ and $W_k = 1$
+\begin{align*}
+  [Z_ik | \cdot] & \propto [y_{ik} | J, p_k]^{Z_{ik}} I \{y_{ik} = 0 \}^{(1 - Z_{ik})} [Z_{ik} | \Psi]^{W_k} I \{Z_{ik} = 0 \}^{(1 - W_{k})}\\
+  & \propto (1 - p_k)^{J Z_{ik}} \Psi_k^{Z_{ik} W_k} (1 - \Psi_k)^{(1 - Z_{ik}) W_k}\\
+  & \propto \left( (1 - p_k)^J \Psi_k \right)^{Z_{ik}} \left(1 - \Psi_k \right)^{(1 - Z_{ik})}\\
+\end{align*}
+which is Bern($\tilde{\Psi}_k$) where $\tilde{\Psi}_k = \left( (1 - p_k)^J \Psi_k \right) / \left( (1 - p_k)^J \Psi_k + (1 - \Psi_k)\right)$\\
+\\
+%
+\subsection{$p_k$}
+%
+Only sample when $Z_{ik} = 1$
+\begin{align*}
+  [p_k | \cdot] & \propto \prod_{i = 1}^n [y_{ik} | J, p_k]^{Z_{ik}} [p_k | \alpha_p, \beta_p]\\
+  & \propto \prod_{i = 1}^n \left( p_k^{y_{ik}} (1 - p_k)^{J - y_{ik}} \right)^{Z_{ik}} p_k^{(\alpha_p - 1)} (1 - p_k)^{(\beta_p - 1)}\\
+    & \propto p_k^{\left( \alpha_p - 1 + \sum_{i = 1}^n y_{ik} Z_{ik} \right)} (1 - p_k)^{\left( \beta_p - 1 + \sum_{i = 1}^n Z_{ik} (J - y_{ik}) \right)}
+\end{align*}
+%
+which is Beta($\alpha_p + \sum_{i = 1}^n y_{ik} Z_{ik}, \beta_p + \sum_{i = 1}^n Z_{ik} (J - y_{ik})$)
+%
+\subsection{$\Psi_k$}
+%
+Only sample when $W_k = 1$
+%
+\begin{align*}
+  [\Psi_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [\Psi_k | \alpha_\Psi, \beta_\Psi]\\
+  & \propto \prod_{i = 1}^n \Psi_{ik}^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \Psi_k^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1)}\\
+  & \propto \Psi_{ik}^{(\alpha_\Psi - 1 + \sum_{i = 1}^n Z_{ik})} (1 - \Psi_k)^{(\beta_\Psi - 1 + \sum_{k = 1} (1 - Z_{ik}))}
+\end{align*}
+which is Beta($\alpha_\Psi + \sum_{i = 1}^n Z_{ik}, \mbox{ } \beta_\Psi + \sum_{k = 1} (1 - Z_{ik}))$
+%
+\subsection{$W_k$}
+%
+Only sample for $y_i = 0$
+%
+\begin{align*}
+  [W_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [W_k | \lambda]\\
+  & \propto \prod_{i = 1}^n \Psi_k^{(Z_{ik} W_k)} (1 - \Psi_k)^{\left( (1 - Z_{ik}) W_k \right)} \lambda^{W_k} (1 - \lambda)^{(1 - W_k)}\\
+  & \propto \prod_{i = 1}^n \left(\Psi_k^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \lambda \right)^{W_k} (1 - \lambda)^{(1 - W_k)}\\
+\end{align*}
+%
+which is Bern($\tilde{\lambda}$) where $\tilde{\lambda} = \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda \right) / \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda) + (1 - \lambda) \right)$
+%
+\subsection{$\alpha_p$}
+%
+Only sample for $W_k = 1$
+%
+\begin{align*}
+  [\alpha_p | \cdot] & \propto \prod_{k = 1}^\Omega [p_k | \alpha_p, \beta_p] [\alpha_p]
+\end{align*}
+where $[p_k | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\alpha_p]$ is Gamma($\alpha_{\alpha_p}, \beta_{\alpha_p}$). This can be sampled using Metropolis-Hastings
+%
+\subsection{$\beta_p$}
+%
+Only sample for $W_k = 1$
+%
+\begin{align*}
+  [\beta_p | \cdot] & \propto \prod_{k = 1}^\Omega [p_k | \alpha_p, \beta_p] [\beta_p]
+\end{align*}
+where $[p_k | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\beta_p]$ is Gamma($\alpha_{\beta_p}, \beta_{\beta_p}$). This can be sampled using Metropolis-Hastings
+%
+\subsection{$\alpha_\Psi$}
+%
+Only sample for $W_k = 1$
+%
+\begin{align*}
+  [\alpha_\Psi | \cdot] & \propto \prod_{k = 1}^\Omega [\Psi_k | \alpha_\Psi, \beta_\Psi] [\alpha_\Psi]
+\end{align*}
+where $[\Psi_k | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) and $[\alpha_\Psi]$ is Gamma($\alpha_{\alpha_\Psi}, \beta_{\alpha_\Psi}$). This can be sampled using Metropolis-Hastings
+%
+\subsection{$\beta_\Psi$}
+%
+Only sample for $W_k = 1$
+%
+\begin{align*}
+  [\beta_\Psi | \cdot] & \propto \prod_{k = 1}^\Omega [\Psi_k | \alpha_\Psi, \beta_\Psi] [\beta_\Psi]
+\end{align*}
+where $[\Psi_k | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) and $[\beta_\Psi]$ is Gamma($\alpha_{\beta_\Psi}, \beta_{\beta_\Psi}$). This can be sampled using Metropolis-Hastings
+%
+\subsection{$\lambda$}
+%
+\begin{align*}
+  [\lambda | \cdot ] & \propto \prod_{k = 1}^\Omega [W_k | \lambda] [\lambda]\\
+  & \propto  \prod_{k = 1}^\Omega \lambda^{W_k} (1 - \lambda)^{(1 - W_k)} \lambda^{(\alpha_\lambda - 1)} (1 - \lambda)^{(\beta_\lambda - 1)}\\
+\end{align*}
+%
+which is Beta($\alpha_\lambda + \sum_{k = 1}^\Omega W_k, \beta_\lambda + \sum_{k = 1}^\Omega (1 - W_k)$)
+\end{document}
