@@ -54,7 +54,7 @@ curve(dgamma(x, alpha.beta.p, beta.beta.p), from = 0, to = 10)
 mean(rgamma(1000, alpha.beta.p, beta.beta.p))
 	
 alpha.lambda <- 5
-beta.lambda <- 3
+beta.lambda <- 2
 
 k.aug <- 500
 		
