@@ -28,8 +28,12 @@
 \subsection{Modelling assumptions}
 %
 \begin{itemize}
+  \item There is an ecological motivation for $\bm{p}$ and $\bm{\Psi}$ coming from the same distribution
+  \item There is no heterogeneity in unobserved covariates for $\bm{p}$ and $\bm{\Psi}$
+  \item All species are "theoretically" available to be sampled
   \item No seasonality
-  \item 
+  \item Closed populations within the $J$ visits
+  \item The actual number of species $N$ lies between the observed number of species $K$ and the number of augmented species $\Omega$
 \end{itemize}
 %
 \subsection{Data model}
@@ -44,6 +48,8 @@ For $i = 1, \ldots, n$ sites,  $k = 1, \ldots, K$ observed species (out of a tot
     \end{cases}
 \end{align*}
 %
+where $y_{ik}$ is the number of times that species $i$ is seen at site $k$ out of $J$ visits, $Z_{ik}$ is an indicator of presence or absence of species $i$ at site $k$, and $p_k$ is the detection probability for species $k$.
+%
 \subsection{Process}
 %
 \begin{align*}
@@ -56,6 +62,8 @@ For $i = 1, \ldots, n$ sites,  $k = 1, \ldots, K$ observed species (out of a tot
   \Psi_k & \sim \mbox{Beta}(\alpha_\Psi, \beta_\Psi)\\
   W_k & \sim \mbox{Bern}(\lambda)\\
 \end{align*}
+%
+where $W_k$ is an indicator of whether an augmented species exists or not in the population and $\sum_{k = 1}^\Omega W_k = N$, the species richness, $\bm{\Psi}_k$ is the presence probability for species $k$, and $\lambda$ is the probability of an augmented species being real  
 %
 \subsection{Parameter}
 %
@@ -77,9 +85,9 @@ For $i = 1, \ldots, n$ sites,  $k = 1, \ldots, K$ observed species (out of a tot
     0 & \mbox{if } W_k = 0\\
     \mbox{Bern}(\Psi_k) & \mbox{if } W_k = 1\\
   \end{cases}$ where $W_k$ represents "ghost species"
-  \item Let $\Omega$ represent the total number of possible species, $\Omega \geq K$
-  \item $W_k \sim \mbox{Bern}(\lambda) \Leftrightarrow k \sim \mbox{Binom}(\Omega, \lambda) \Leftrightarrow \sum_{k = 1}^\Omega W_k = K$
-  \item Goal: estimate $\Psi_k$ and predict $\Omega$
+  \item Let $\Omega$ represent the total number of possible species, $\Omega \geq N \geq K$
+  \item $W_k \sim \mbox{Bern}(\lambda) \Leftrightarrow N \sim \mbox{Binom}(\Omega, \lambda) \Leftrightarrow \sum_{k = 1}^\Omega W_k = N$
+  \item Goal: estimate $\Psi_k$ and predict $N$
 \end{itemize}
 %
 \section{Posterior}
@@ -93,9 +101,11 @@ For $i = 1, \ldots, n$ sites,  $k = 1, \ldots, K$ observed species (out of a tot
 %
 \subsection{$Z_{ik}$}
 %
-For $y_{ik} = 1$, $Z_{ik} = 1$. For $y_{ik} = 0$ and $W_k = 1$
+For $y_{ik} = 1$, $Z_{ik} = 1$.\\
+\\
+For $y_{ik} = 0$ and $W_k = 1$
 \begin{align*}
-  [Z_ik | \cdot] & \propto [y_{ik} | J, p_k]^{Z_{ik}} I \{y_{ik} = 0 \}^{(1 - Z_{ik})} [Z_{ik} | \Psi]^{W_k} I \{Z_{ik} = 0 \}^{(1 - W_{k})}\\
+  [Z_{ik} | \cdot] & \propto [y_{ik} | J, p_k]^{Z_{ik}} I \{y_{ik} = 0 \}^{(1 - Z_{ik})} [Z_{ik} | \Psi]^{W_k} I \{Z_{ik} = 0 \}^{(1 - W_{k})}\\
   & \propto (1 - p_k)^{J Z_{ik}} \Psi_k^{Z_{ik} W_k} (1 - \Psi_k)^{(1 - Z_{ik}) W_k}\\
   & \propto \left( (1 - p_k)^J \Psi_k \right)^{Z_{ik}} \left(1 - \Psi_k \right)^{(1 - Z_{ik})}\\
 \end{align*}
@@ -104,7 +114,7 @@ which is Bern($\tilde{\Psi}_k$) where $\tilde{\Psi}_k = \left( (1 - p_k)^J \Psi_
 %
 \subsection{$p_k$}
 %
-Only sample when $Z_{ik} = 1$
+Only sample when $Z_{ik} = 1$ and $W_k = 1$
 \begin{align*}
   [p_k | \cdot] & \propto \prod_{i = 1}^n [y_{ik} | J, p_k]^{Z_{ik}} [p_k | \alpha_p, \beta_p]\\
   & \propto \prod_{i = 1}^n \left( p_k^{y_{ik}} (1 - p_k)^{J - y_{ik}} \right)^{Z_{ik}} p_k^{(\alpha_p - 1)} (1 - p_k)^{(\beta_p - 1)}\\
@@ -126,7 +136,7 @@ which is Beta($\alpha_\Psi + \sum_{i = 1}^n Z_{ik}, \mbox{ } \beta_\Psi + \sum_{
 %
 \subsection{$W_k$}
 %
-Only sample for $y_i = 0$
+Only sample for $\sum_{i = 1}^{n} y_{ik} = 0$
 %
 \begin{align*}
   [W_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [W_k | \lambda]\\
@@ -134,14 +144,14 @@ Only sample for $y_i = 0$
   & \propto \prod_{i = 1}^n \left(\Psi_k^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \lambda \right)^{W_k} (1 - \lambda)^{(1 - W_k)}\\
 \end{align*}
 %
-which is Bern($\tilde{\lambda}$) where $\tilde{\lambda} = \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda \right) / \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda) + (1 - \lambda) \right)$
+which is Bern($\tilde{\lambda}$) where $\tilde{\lambda} = \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda \right) / \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda + (1 - \lambda) \right)$
 %
 \subsection{$\alpha_p$}
 %
 Only sample for $W_k = 1$
 %
 \begin{align*}
-  [\alpha_p | \cdot] & \propto \prod_{k = 1}^\Omega [p_k | \alpha_p, \beta_p] [\alpha_p]
+  [\alpha_p | \cdot] & \propto \prod_{k = 1}^\Omega [p_k | \alpha_p, \beta_p] [\alpha_p] I\{W_k = 1\}
 \end{align*}
 where $[p_k | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\alpha_p]$ is Gamma($\alpha_{\alpha_p}, \beta_{\alpha_p}$). This can be sampled using Metropolis-Hastings
 %
@@ -150,7 +160,7 @@ where $[p_k | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\alpha_p]$ 
 Only sample for $W_k = 1$
 %
 \begin{align*}
-  [\beta_p | \cdot] & \propto \prod_{k = 1}^\Omega [p_k | \alpha_p, \beta_p] [\beta_p]
+  [\beta_p | \cdot] & \propto \prod_{k = 1}^\Omega [p_k | \alpha_p, \beta_p] [\beta_p] I\{W_k = 1\}
 \end{align*}
 where $[p_k | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\beta_p]$ is Gamma($\alpha_{\beta_p}, \beta_{\beta_p}$). This can be sampled using Metropolis-Hastings
 %
@@ -159,7 +169,7 @@ where $[p_k | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\beta_p]$ i
 Only sample for $W_k = 1$
 %
 \begin{align*}
-  [\alpha_\Psi | \cdot] & \propto \prod_{k = 1}^\Omega [\Psi_k | \alpha_\Psi, \beta_\Psi] [\alpha_\Psi]
+  [\alpha_\Psi | \cdot] & \propto \prod_{k = 1}^\Omega [\Psi_k | \alpha_\Psi, \beta_\Psi] [\alpha_\Psi] I\{W_k = 1\}
 \end{align*}
 where $[\Psi_k | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) and $[\alpha_\Psi]$ is Gamma($\alpha_{\alpha_\Psi}, \beta_{\alpha_\Psi}$). This can be sampled using Metropolis-Hastings
 %
@@ -168,7 +178,7 @@ where $[\Psi_k | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) an
 Only sample for $W_k = 1$
 %
 \begin{align*}
-  [\beta_\Psi | \cdot] & \propto \prod_{k = 1}^\Omega [\Psi_k | \alpha_\Psi, \beta_\Psi] [\beta_\Psi]
+  [\beta_\Psi | \cdot] & \propto \prod_{k = 1}^\Omega [\Psi_k | \alpha_\Psi, \beta_\Psi] [\beta_\Psi] I\{W_k = 1\}
 \end{align*}
 where $[\Psi_k | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) and $[\beta_\Psi]$ is Gamma($\alpha_{\beta_\Psi}, \beta_{\beta_\Psi}$). This can be sampled using Metropolis-Hastings
 %
@@ -180,4 +190,9 @@ where $[\Psi_k | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) an
 \end{align*}
 %
 which is Beta($\alpha_\lambda + \sum_{k = 1}^\Omega W_k, \beta_\lambda + \sum_{k = 1}^\Omega (1 - W_k)$)
+%
+\section{Next Steps}
+\begin{itemize}
+  \item Include a probit link function
+\end{itemize}
 \end{document}
