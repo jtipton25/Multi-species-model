@@ -9,9 +9,9 @@ set.seed(1)
 ## Initialize simulation parameters
 ##
 
-n <- 50
-N <- 100
-J <- 5
+n <- 80
+N <- 300
+J <- 8
 
 # presence probability
 alpha.psi <- 1 
@@ -67,7 +67,6 @@ abline(v = beta.p, col = 'red')
 alpha.lambda <- 2
 beta.lambda <- 5
 curve(dbeta(x, alpha.lambda, beta.lambda))
-abline(v = lambda, col = 'red')
 
 ##
 ## Initialize MCMC parameters
@@ -75,10 +74,10 @@ abline(v = lambda, col = 'red')
 
 n.aug <- 1000
 n.mcmc <- 5000
-alpha.p.tune <- 0.05
-beta.p.tune <- 0.05
-alpha.psi.tune <- 0.05
-beta.psi.tune <- 0.05
+alpha.p.tune <- 0.25
+beta.p.tune <- 0.25
+alpha.psi.tune <- 0.25
+beta.psi.tune <- 0.25
 
 source('mcmcMsJT.R')
 
@@ -88,16 +87,25 @@ out <- mcmcMS(data$Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 finish <- Sys.time() - start
 finish
 
+dim(data$Y)[2]
 
 layout(matrix(1:9, nrow = 3))
 hist(out$N.save[floor(n.mcmc/10) : n.mcmc], breaks = 20)
 abline(v = N, col = 'red')
-plot(out$alpha.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)))
+#
+plot(out$alpha.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'alpha_p')
 abline(h = alpha.p, col = 'red')
-plot(out$beta.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)))
+beta.p
+#
+plot(out$beta.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'beta_p')
 abline(h = beta.p, col = 'red')
-plot(out$alpha.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)))
+alpha.p
+#
+plot(out$alpha.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'alpha_psi')
 abline(h = alpha.psi, col = 'red')
-plot(out$beta.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)))
+alpha.psi
+#
+plot(out$beta.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'beta_psi')
 abline(h = beta.psi, col = 'red')
+beta.psi
 
