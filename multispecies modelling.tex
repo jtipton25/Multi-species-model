@@ -130,9 +130,9 @@ Only sample when $W_k = 1$
 \begin{align*}
   [\Psi_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [\Psi_k | \alpha_\Psi, \beta_\Psi]\\
   & \propto \prod_{i = 1}^n \Psi_{ik}^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \Psi_k^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1)}\\
-  & \propto \Psi_{ik}^{(\alpha_\Psi - 1 + \sum_{i = 1}^n Z_{ik})} (1 - \Psi_k)^{(\beta_\Psi - 1 + \sum_{k = 1} (1 - Z_{ik}))}
+  & \propto \Psi_{ik}^{(\alpha_\Psi - 1 + \sum_{i = 1}^n Z_{ik})} (1 - \Psi_k)^{(\beta_\Psi - 1 + \sum_{i = 1}^n (1 - Z_{ik}))}
 \end{align*}
-which is Beta($\alpha_\Psi + \sum_{i = 1}^n Z_{ik}, \mbox{ } \beta_\Psi + \sum_{k = 1} (1 - Z_{ik}))$
+which is Beta($\alpha_\Psi + \sum_{i = 1}^n Z_{ik}, \mbox{ } \beta_\Psi + \sum_{i = 1}^n (1 - Z_{ik}))$
 %
 \subsection{$W_k$}
 %
