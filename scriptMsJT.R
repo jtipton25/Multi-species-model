@@ -92,7 +92,14 @@ dim(data$Y)[2]
 layout(matrix(1:9, nrow = 3))
 hist(out$N.save[floor(n.mcmc/10) : n.mcmc], breaks = 20)
 abline(v = N, col = 'red')
+<<<<<<< HEAD
 #
+=======
+<<<<<<< HEAD
+#
+=======
+>>>>>>> 09a67e4f4dc01c344a0086b5c25cb9531de5fbab
+>>>>>>> d6df24fcae7bac22e2271f843bbe4532204f7fa6
 plot(out$alpha.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'alpha_p')
 abline(h = alpha.p, col = 'red')
 beta.p
@@ -108,3 +115,10 @@ alpha.psi
 plot(out$beta.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'beta_psi')
 abline(h = beta.psi, col = 'red')
 beta.psi
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> 09a67e4f4dc01c344a0086b5c25cb9531de5fbab
+>>>>>>> d6df24fcae7bac22e2271f843bbe4532204f7fa6
