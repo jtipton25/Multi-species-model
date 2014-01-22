@@ -108,4 +108,3 @@ alpha.psi
 plot(out$beta.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'beta_psi')
 abline(h = beta.psi, col = 'red')
 beta.psi
-
