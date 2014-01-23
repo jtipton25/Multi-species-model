@@ -11,11 +11,11 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	##
 	
 	makeSumYZ <-function(s, Y, Z){
-		sum(Y[, s] * Z[, s])
+		Y[, s] %*% Z[, s]
 	}
 	
 	makeSumJYZ <-function(s, Y, Z, J){
-		sum((J - Y[, s]) * Z[, s])
+	  ((J - Y[, s]) %*% Z[, s])
 	}
 	
 	##
@@ -47,7 +47,8 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
   Z <- matrix(nrow = n, ncol = Omega)
   Z[Y.aug > 0] <- 1 
 	Z[Y.aug == 0] <- 0
-	p.accept <- 0
+	sum.Z <- apply(Z, 2, sum)  
+  p.accept <- 0
 	psi.accept <- 0
 	
 	##
@@ -72,8 +73,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  ## Sample W
 	  ##	
 	
-	  sum.Z <- apply(Z, 2, sum)	
-	  lambda.tilde <- ((psi^sum.Z * (1 - psi) ^ (n - sum.Z) * lambda) / ((psi^sum.Z * (1 - psi) ^ (n - sum.Z) * lambda) + 1 - lambda))[Y0]
+	  lambda.tilde <- ((psi^sum.Z * (1 - psi) ^ (n - sum.Z) * lambda) / ((psi^sum.Z * (1 - psi) ^ (n - sum.Z) * lambda) + (1 - lambda)))[Y0]
 	  W[Y0] <-	rbinom(n.aug, 1, lambda.tilde)
 	  W.1 <- W == 1
 	  sumW <- sum(W)
@@ -86,18 +86,31 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		## work on speeding this up !!!
 		##
 		
-	  psi.tilde <- (1 - p)^J * psi /((1 - p)^J * psi + 1 - psi) 
+# 	  psi.tilde <- (1 - p)^J * psi /((1 - p)^J * psi + 1 - psi) 
+# 		for(k in 1:Omega){ # for k in W == 1?
+# 			for(i in 1:n){
+# 	  	#if(Y.aug[i, k] == 0 && W[k] == 1){
+# 		    if(Y.0.list[[k]][i]){
+# 				  if(W.1[k]){ # move up before for(i in 1:n)
+#    	    Z[i, k] <- rbinom(1, 1, psi.tilde[k])
+# 				  }
+# 		   }
+# 		  }
+# 	  }
+
+    psi.tilde <- (1 - p)^J * psi /((1 - p)^J * psi + (1 - psi))
 		for(k in 1:Omega){ # for k in W == 1?
-			for(i in 1:n){
+		  if(W.1[k]){
+        for(i in 1:n){
 	  	#if(Y.aug[i, k] == 0 && W[k] == 1){
-		    if(Y.0.list[[k]][i]){
-				  if(W.1[k]){ # move up before for(i in 1:n)
-   	    Z[i, k] <- rbinom(1, 1, psi.tilde[k])
+		      if(Y.0.list[[k]][i]){
+				   # move up before for(i in 1:n)
+   	        Z[i, k] <- rbinom(1, 1, psi.tilde[k])
 				  }
-		   }
+		    }
 		  }
-	  }
-		
+	  }		
+
 	  sumZ <- apply(Z, 2, sum)
 		
 	  ## 
@@ -115,9 +128,9 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		
 		sumYZ <- sapply(1:K, makeSumYZ, Y = Y, Z = Z)
 		sumJYZ <- sapply(1:K, makeSumJYZ, Y = Y, Z = Z, J = J)
-		p[1:K] <- rbeta(1, alpha.p + sumYZ, beta.p + sumJYZ)
-		p[Y0] <- rbeta(n.aug, alpha.p, beta.p)
-		
+		p[1:K] <- rbeta(K, alpha.p + sumYZ, beta.p + sumJYZ)
+    p[sumZ > 0 & W == 1][ - Y1] <- rbeta(sum(sumZ > 0 & W == 1) - K, alpha.p, beta.p + sumZ[sumZ > 0 & W == 1][ - Y1] * J) ## all y values are 0
+
 	  ##
 	  ## Sample Psi
   	##
@@ -127,7 +140,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 #    	psi[k] <- rbeta(1, alpha.psi + sumZ[k], beta.psi + n - sumZ[k])
 #		  }
 #	  }	
-		psi[W.1] <- rbeta(1, alpha.psi + sumZ, beta.psi + n - sumZ)
+		psi[W.1] <- rbeta(sum(W.1), alpha.psi + sumZ, beta.psi + n - sumZ)
 
 	  ##
 	  ## Sample alpha.p and beta.p
@@ -165,7 +178,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		  }
 	  }
 	
-	##
+  	##
     ## Sample lambda	
     ##				
 							
@@ -184,5 +197,5 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
   	beta.psi.save[l] <- beta.psi # vector(length = n.mcmc)	
 		lambda.save[l] <- lambda
   }
-	list(p.save = p.save, psi.save = psi.save, N.save = N.save, alpha.p.save = alpha.p.save, beta.p.save = beta.p.save, alpha.psi.save = alpha.psi.save, beta.psi.save = beta.psi.save, lambda = lambda, p.accept = p.accept, psi.accept = psi.accept)
+	list(p.save = p.save, psi.save = psi.save, N.save = N.save, alpha.p.save = alpha.p.save, beta.p.save = beta.p.save, alpha.psi.save = alpha.psi.save, beta.psi.save = beta.psi.save, lambda.save = lambda.save, p.accept = p.accept, psi.accept = psi.accept)
 }

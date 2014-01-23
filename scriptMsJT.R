@@ -91,14 +91,13 @@ curve(dbeta(x, alpha.lambda, beta.lambda))
 ##
 
 n.aug <- 1000
-n.mcmc <- 2000
-alpha.p.tune <- 0.25
-beta.p.tune <- 0.25
-alpha.psi.tune <- 0.25
-beta.psi.tune <- 0.25
+n.mcmc <- 4000
+alpha.p.tune <- 0.05
+beta.p.tune <- 0.05
+alpha.psi.tune <- 0.05
+beta.psi.tune <- 0.05
 
 source('mcmcMsJT.R')
-
 
 start <- Sys.time()
 out <- mcmcMS(data$Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc)
@@ -106,6 +105,5 @@ finish <- Sys.time() - start
 finish
 
 dim(data$Y)[2]
-
 
 make.plot(out)
