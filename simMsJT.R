@@ -5,7 +5,7 @@
 
 makeMultiSpec <- function(n, N, J, alpha.psi, beta.psi, alpha.p, beta.p){
 	psi <- rbeta(N, alpha.psi, beta.psi) # alpha.psi = 1, beta.psi = 3
-	p <- rbeta(N,alpha.p, beta.p) # alpha.p = 1, beta.p = 3
+	p <- rbeta(N, alpha.p, beta.p) # alpha.p = 1, beta.p = 3
 	Y.full <- matrix(nrow = n, ncol = N)
 	Z <- matrix(nrow = n, ncol = N)
 	
