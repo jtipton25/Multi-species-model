@@ -73,7 +73,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  ##	
 	
 	  sum.Z <- apply(Z, 2, sum)	
-	  lambda.tilde <- ((psi^sum.Z * (1 - psi) ^ (1 - sum.Z) * lambda) / ((psi^sum.Z * (1 - psi) ^ (1 - sum.Z) * lambda) + 1 - lambda))[Y0]
+	  lambda.tilde <- ((psi^sum.Z * (1 - psi) ^ (n - sum.Z) * lambda) / ((psi^sum.Z * (1 - psi) ^ (n - sum.Z) * lambda) + 1 - lambda))[Y0]
 	  W[Y0] <-	rbinom(n.aug, 1, lambda.tilde)
 	  W.1 <- W == 1
 	  sumW <- sum(W)
@@ -87,11 +87,11 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		##
 		
 	  psi.tilde <- (1 - p)^J * psi /((1 - p)^J * psi + 1 - psi) 
-		for(k in 1:Omega){
+		for(k in 1:Omega){ # for k in W == 1?
 			for(i in 1:n){
 	  	#if(Y.aug[i, k] == 0 && W[k] == 1){
 		    if(Y.0.list[[k]][i]){
-				  if(W.1[k]){
+				  if(W.1[k]){ # move up before for(i in 1:n)
    	    Z[i, k] <- rbinom(1, 1, psi.tilde[k])
 				  }
 		   }
@@ -165,9 +165,9 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		  }
 	  }
 	
-	  ##
-  	## Sample lambda	
-	  ##				
+	##
+    ## Sample lambda	
+    ##				
 							
 	  lambda <- rbeta(1, alpha.lambda + sumW, beta.lambda + Omega - sumW)
 		

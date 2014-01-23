@@ -1,27 +1,45 @@
 set.seed(1)
+setwd('~/Multi-species-model')
 
 ##
 ## Libraries and functions
 ##
 
+make.plot <- function(out){
+  layout(matrix(1:9, nrow = 3))
+  hist(out$N.save[floor(n.mcmc/10) : n.mcmc], breaks = 20)
+  abline(v = N, col = 'red')
+  #
+  plot(out$alpha.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'alpha_p')
+  abline(h = alpha.p, col = 'red')
+  #
+  plot(out$beta.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'beta_p')
+  abline(h = beta.p, col = 'red')
+  #
+  plot(out$alpha.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'alpha_psi')
+  abline(h = alpha.psi, col = 'red')
+  #
+  plot(out$beta.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'beta_psi')
+  abline(h = beta.psi, col = 'red')
+}
 
 ##
 ## Initialize simulation parameters
 ##
 
-n <- 80
+n <- 25
 N <- 300
-J <- 8
+J <- 4
 
 # presence probability
-alpha.psi <- 1 
-beta.psi <- 3
+alpha.psi <- 6
+beta.psi <- 6
 psi <- rbeta(N, alpha.psi, beta.psi) # alpha.psi = 1, beta.psi = 3
 curve(dbeta(x, alpha.psi, beta.psi))
 
 # detection probability
-alpha.p <- 2 
-beta.p <- 4
+alpha.p <- 1.5 
+beta.p <- 8
 p <- rbeta(N,alpha.p, beta.p) # alpha.p = 1, beta.p = 3
 curve(dbeta(x, alpha.p, beta.p))
 
@@ -73,7 +91,7 @@ curve(dbeta(x, alpha.lambda, beta.lambda))
 ##
 
 n.aug <- 1000
-n.mcmc <- 5000
+n.mcmc <- 2000
 alpha.p.tune <- 0.25
 beta.p.tune <- 0.25
 alpha.psi.tune <- 0.25
@@ -89,36 +107,5 @@ finish
 
 dim(data$Y)[2]
 
-layout(matrix(1:9, nrow = 3))
-hist(out$N.save[floor(n.mcmc/10) : n.mcmc], breaks = 20)
-abline(v = N, col = 'red')
-<<<<<<< HEAD
-#
-=======
-<<<<<<< HEAD
-#
-=======
->>>>>>> 09a67e4f4dc01c344a0086b5c25cb9531de5fbab
->>>>>>> d6df24fcae7bac22e2271f843bbe4532204f7fa6
-plot(out$alpha.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'alpha_p')
-abline(h = alpha.p, col = 'red')
-beta.p
-#
-plot(out$beta.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'beta_p')
-abline(h = beta.p, col = 'red')
-alpha.p
-#
-plot(out$alpha.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'alpha_psi')
-abline(h = alpha.psi, col = 'red')
-alpha.psi
-#
-plot(out$beta.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'beta_psi')
-abline(h = beta.psi, col = 'red')
-beta.psi
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 
-=======
->>>>>>> 09a67e4f4dc01c344a0086b5c25cb9531de5fbab
->>>>>>> d6df24fcae7bac22e2271f843bbe4532204f7fa6
+make.plot(out)
