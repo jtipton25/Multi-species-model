@@ -1,27 +1,13 @@
 set.seed(1)
-setwd('~/Multi-species-model')
+setwd('~/Multi-species-model/JT/')
 
 ##
 ## Libraries and functions
 ##
 
-make.plot <- function(out){
-  layout(matrix(1:9, nrow = 3))
-  hist(out$N.save[floor(n.mcmc/10) : n.mcmc], breaks = 20)
-  abline(v = N, col = 'red')
-  #
-  plot(out$alpha.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'alpha_p')
-  abline(h = alpha.p, col = 'red')
-  #
-  plot(out$beta.p.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$p.accept, 2)), ylab = 'beta_p')
-  abline(h = beta.p, col = 'red')
-  #
-  plot(out$alpha.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'alpha_psi')
-  abline(h = alpha.psi, col = 'red')
-  #
-  plot(out$beta.psi.save[floor(n.mcmc/10) : n.mcmc], type = 'l', main = paste('accept rate', round(out$psi.accept, 2)), ylab = 'beta_psi')
-  abline(h = beta.psi, col = 'red')
-}
+source('make.plot.R')
+source('simMsJT.R')
+source('mcmcMsJT.R')
 
 ##
 ## Initialize simulation parameters
@@ -47,7 +33,6 @@ curve(dbeta(x, alpha.p, beta.p))
 ## Sample data
 ##
 
-source('simMsJT.R')
 data <- makeMultiSpec(n, N, J, alpha.psi, beta.psi, alpha.p, beta.p)
 
 ##
@@ -96,8 +81,6 @@ alpha.p.tune <- 0.05
 beta.p.tune <- 0.05
 alpha.psi.tune <- 0.05
 beta.psi.tune <- 0.05
-
-source('mcmcMsJT.R')
 
 start <- Sys.time()
 out <- mcmcMS(data$Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc)
