@@ -13,9 +13,9 @@ source('mcmcMsJT.R')
 ## Initialize simulation parameters
 ##
 
-n <- 25
-N <- 300
-J <- 4
+n <- 10 #25
+N <- 50 #300
+J <- 2 #4
 
 # presence probability
 alpha.psi <- 6
@@ -76,7 +76,7 @@ curve(dbeta(x, alpha.lambda, beta.lambda))
 ##
 
 n.aug <- 1000
-n.mcmc <- 4000
+n.mcmc <- 1000
 alpha.p.tune <- 0.05
 beta.p.tune <- 0.05
 alpha.psi.tune <- 0.05

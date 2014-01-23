@@ -10,12 +10,12 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	## libraries and functions
 	##
 	
-	makeSumYZ <-function(s, Y, Z){
-		Y[, s] %*% Z[, s]
+	makeSumYZ <-function(s, Y.aug, Z){
+		Y.aug[, s] %*% Z[, s]
 	}
 	
-	makeSumJYZ <-function(s, Y, Z, J){
-	  ((J - Y[, s]) %*% Z[, s])
+	makeSumJYZ <-function(s, Y.aug, Z, J){
+	  ((J - Y.aug[, s]) %*% Z[, s])
 	}
 	
 	##
@@ -35,10 +35,10 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	Omega <- K + n.aug
 	Y1 <- 1:K
   Y0 <- (K+1):Omega
-	Y.0.list <- vector('list', length = Omega)
-	for(s in 1:Omega){
-		Y.0.list[[s]] <- Y.aug[, s] == 0
-	}
+#	Y0.list <- vector('list', length = Omega)
+#	for(s in 1:Omega){
+#		Y0.list[[s]] <- Y.aug[, s] == 0
+#	}
 	p <- rbeta(Omega, alpha.p, beta.p)
 	psi <- rbeta(Omega, alpha.psi, beta.psi)
 	W <- vector(length = Omega)
@@ -90,7 +90,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 # 		for(k in 1:Omega){ # for k in W == 1?
 # 			for(i in 1:n){
 # 	  	#if(Y.aug[i, k] == 0 && W[k] == 1){
-# 		    if(Y.0.list[[k]][i]){
+# 		    if(Y0.list[[k]][i]){
 # 				  if(W.1[k]){ # move up before for(i in 1:n)
 #    	    Z[i, k] <- rbinom(1, 1, psi.tilde[k])
 # 				  }
@@ -103,7 +103,8 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		  if(W.1[k]){
         for(i in 1:n){
 	  	#if(Y.aug[i, k] == 0 && W[k] == 1){
-		      if(Y.0.list[[k]][i]){
+		      #if(Y0.list[[k]][i]){
+          if(Y.aug[i, k] == 0){
 				   # move up before for(i in 1:n)
    	        Z[i, k] <- rbinom(1, 1, psi.tilde[k])
 				  }
@@ -126,8 +127,8 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		#  p[k] <- rbeta(1, alpha.p + sumYZ[k], beta.p + sumJYZ[k])
 	  #}
 		
-		sumYZ <- sapply(1:K, makeSumYZ, Y = Y, Z = Z)
-		sumJYZ <- sapply(1:K, makeSumJYZ, Y = Y, Z = Z, J = J)
+		sumYZ <- sapply(1:Omega, makeSumYZ, Y.aug = Y.aug, Z = Z)
+		sumJYZ <- sapply(1:Omega, makeSumJYZ, Y.aug = Y.aug, Z = Z, J = J)
 		p[1:K] <- rbeta(K, alpha.p + sumYZ, beta.p + sumJYZ)
     p[sumZ > 0 & W == 1][ - Y1] <- rbeta(sum(sumZ > 0 & W == 1) - K, alpha.p, beta.p + sumZ[sumZ > 0 & W == 1][ - Y1] * J) ## all y values are 0
 
@@ -140,7 +141,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 #    	psi[k] <- rbeta(1, alpha.psi + sumZ[k], beta.psi + n - sumZ[k])
 #		  }
 #	  }	
-		psi[W.1] <- rbeta(sum(W.1), alpha.psi + sumZ, beta.psi + n - sumZ)
+		psi[W.1][ - Y1] <- rbeta(sum(W.1[Y0]), alpha.psi + sumZ, beta.psi + n - sumZ)
 
 	  ##
 	  ## Sample alpha.p and beta.p
