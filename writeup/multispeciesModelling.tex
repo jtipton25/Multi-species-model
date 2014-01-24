@@ -114,7 +114,7 @@ which is Bern($\tilde{\Psi}_k$) where $\tilde{\Psi}_k = \left( (1 - p_k)^J \Psi_
 %
 \subsection{$p_k$}
 %
-Only sample when $Z_{ik} = 1$ and $W_k = 1$
+Only sample when $\sum_{i = 1}^n Z_{ik} > 0$ and $W_k = 1$
 \begin{align*}
   [p_k | \cdot] & \propto \prod_{i = 1}^n [y_{ik} | J, p_k]^{Z_{ik}} [p_k | \alpha_p, \beta_p]\\
   & \propto \prod_{i = 1}^n \left( p_k^{y_{ik}} (1 - p_k)^{J - y_{ik}} \right)^{Z_{ik}} p_k^{(\alpha_p - 1)} (1 - p_k)^{(\beta_p - 1)}\\
@@ -189,7 +189,7 @@ where $[\Psi_k | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) an
   & \propto  \prod_{k = 1}^\Omega \lambda^{W_k} (1 - \lambda)^{(1 - W_k)} \lambda^{(\alpha_\lambda - 1)} (1 - \lambda)^{(\beta_\lambda - 1)}\\
 \end{align*}
 %
-which is Beta($\alpha_\lambda + \sum_{k = 1}^\Omega W_k, \beta_\lambda + \sum_{k = 1}^\Omega (1 - W_k)$)
+which is Beta($\alpha_\lambda + \sum_{k = K + 1}^\Omega W_k, \beta_\lambda + \sum_{k = K + 1}^\Omega (1 - W_k)$)
 %
 \section{Next Steps}
 \begin{itemize}
