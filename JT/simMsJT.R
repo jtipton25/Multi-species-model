@@ -39,6 +39,6 @@ makeMultiSpec <- function(n, N, J, alpha.psi, beta.psi, alpha.p, beta.p){
 	## return data
 	##
 	
-	list(Y = Y, Z = Z, Y.full = Y.full, psi, p)
+	list(Y = Y, Z = Z, Y.full = Y.full, psi = psi, p = p)
 }
 
