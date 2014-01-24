@@ -86,7 +86,7 @@ abline(v = (N - dim(data$Y)[2]) / n.aug, col = 'red')
 ## Initialize MCMC parameters
 ##
 
-n.mcmc <- 5000
+n.mcmc <- 200
 n.burn <- floor(n.mcmc / 5)
 alpha.p.tune <- 0.15
 beta.p.tune <- 0.15

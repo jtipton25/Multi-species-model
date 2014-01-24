@@ -46,7 +46,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
   W[Y0] <- rbinom(n.aug, 1, lambda)	
   Z <- matrix(nrow = n, ncol = Omega)
   Z[Y.aug > 0] <- 1 
-	Z[Y.aug == 0] <- rbinom(sum(Y.aug == 0), 1, .0025)
+	Z[Y.aug == 0] <- rbinom(sum(Y.aug == 0), 1, 0.025)
 	sumZ <- apply(Z, 2, sum)  
   p.accept <- 0
 	psi.accept <- 0
@@ -73,8 +73,8 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  ## Sample W
 	  ##	
 	
-	  lambda.tilde <- ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) / ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) + (1 - lambda)))[Y0]
-	  W[Y0] <- rbinom(n.aug, 1, lambda.tilde)
+	  lambda.tilde <- ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) / ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) + (1 - lambda)))
+	  W[Y0] <- rbinom(n.aug, 1, lambda.tilde[Y0])
 	  W1 <- W == 1
 	  sumW <- sum(W)
 	
