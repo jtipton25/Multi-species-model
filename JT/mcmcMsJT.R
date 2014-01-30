@@ -99,6 +99,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 # 	  }
 
     psi.tilde <- ((1 - p)^J * psi) / ((1 - p)^J * psi + (1 - psi))
+    psi.tilde2 <- (1 - p)^J
 		#for(k in 1:Omega){ # for k in W == 1?
 		for(k in (1:Omega)[W1]){#  if(W1[k]){
         for(i in 1:n){
@@ -111,6 +112,17 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		    }
 		 # }
 	  }		
+		for(k in (1:Omega)[!W1]){#  if(W1[k]){
+		  for(i in 1:n){
+		    #if(Y.aug[i, k] == 0 && W[k] == 1){
+		    #if(Y0.list[[k]][i]){
+		    if(Y.aug[i, k] == 0){
+		      # move up before for(i in 1:n)
+		      Z[i, k] <- rbinom(1, 1, psi.tilde2[k])
+		    }
+		  }
+		  # }
+		}	
 
 	  sumZ <- apply(Z, 2, sum)
 		
@@ -133,7 +145,8 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
     #if(sum(sumZ > 0 & W1) > K){
       #p[sumZ > 0 & W1][ - Y1] <- rbeta(sum(sumZ > 0 & W1) - K, alpha.p + sumYZ[sumZ > 0 & W1], beta.p + sumJYZ[sumZ > 0 & W1][ - Y1]) ## all y values are 0
 		#p[W1][ - Y1] <- rbeta(sum(W1) - K, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1][ - Y1] * J) 
-		p[W1] <- rbeta(sumW, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1]) 
+		#p[W1] <- rbeta(sumW, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1]) 
+		p <- rbeta(Omega, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1]) 
     #}
 
 	  ##
@@ -146,7 +159,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 #		  }
 #	  }	
 		psi[W1] <- rbeta(sum(W1), alpha.psi + sumZ[W1], beta.psi + n - sumZ[W1])
-
+    psi[!W1] <- rbeta(sum(!W1), alpha.psi, beta.psi)
     ##
 	  ## Sample alpha.p and beta.p
   	##
@@ -154,10 +167,10 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  alpha.p.star <- rnorm(1, alpha.p, alpha.p.tune)
 	  beta.p.star <- rnorm(1, beta.p, beta.p.tune)
   	if(alpha.p.star > 0 & beta.p.star > 0){
-		  #mh1.p <- sum(dbeta(p, alpha.p.star, beta.p.star, log = TRUE)) + dgamma(alpha.p.star, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p.star, alpha.beta.p, beta.beta.p, log = TRUE)
-		  mh1.p <- sum(dbeta(p[W1], alpha.p.star, beta.p.star, log = TRUE)) + dgamma(alpha.p.star, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p.star, alpha.beta.p, beta.beta.p, log = TRUE)
-	  	#mh2.p <- sum(dbeta(p, alpha.p, beta.p, log = TRUE)) + dgamma(alpha.p, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p, alpha.beta.p, beta.beta.p, log = TRUE)
-		  mh2.p <- sum(dbeta(p[W1], alpha.p, beta.p, log = TRUE)) + dgamma(alpha.p, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p, alpha.beta.p, beta.beta.p, log = TRUE)
+		  mh1.p <- sum(dbeta(p, alpha.p.star, beta.p.star, log = TRUE)) + dgamma(alpha.p.star, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p.star, alpha.beta.p, beta.beta.p, log = TRUE)
+# 		  mh1.p <- sum(dbeta(p[W1], alpha.p.star, beta.p.star, log = TRUE)) + dgamma(alpha.p.star, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p.star, alpha.beta.p, beta.beta.p, log = TRUE)
+	  	mh2.p <- sum(dbeta(p, alpha.p, beta.p, log = TRUE)) + dgamma(alpha.p, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p, alpha.beta.p, beta.beta.p, log = TRUE)
+# 		  mh2.p <- sum(dbeta(p[W1], alpha.p, beta.p, log = TRUE)) + dgamma(alpha.p, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p, alpha.beta.p, beta.beta.p, log = TRUE)
   		mh.p <- exp(mh1.p - mh2.p)
 		
 		  if(mh.p > runif(1)){
@@ -176,10 +189,10 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  alpha.psi.star <- rnorm(1, alpha.psi, alpha.psi.tune)
 	  beta.psi.star <- rnorm(1, beta.psi, beta.psi.tune)
   	if(alpha.psi.star > 0 & beta.psi.star > 0){
-		  #mh1.psi <- sum(dbeta(psi, alpha.psi.star, beta.psi.star, log = TRUE)) + dgamma(alpha.psi.star, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi.star, alpha.beta.psi, beta.beta.psi, log = TRUE)
-  	  mh1.psi <- sum(dbeta(psi[W1], alpha.psi.star, beta.psi.star, log = TRUE)) + dgamma(alpha.psi.star, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi.star, alpha.beta.psi, beta.beta.psi, log = TRUE)
-  	  #mh2.psi <- sum(dbeta(psi, alpha.psi, beta.psi, log = TRUE)) + dgamma(alpha.psi, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi, alpha.beta.psi, beta.beta.psi, log = TRUE)
-      mh2.psi <- sum(dbeta(psi[W1], alpha.psi, beta.psi, log = TRUE)) + dgamma(alpha.psi, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi, alpha.beta.psi, beta.beta.psi, log = TRUE)
+		  mh1.psi <- sum(dbeta(psi, alpha.psi.star, beta.psi.star, log = TRUE)) + dgamma(alpha.psi.star, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi.star, alpha.beta.psi, beta.beta.psi, log = TRUE)
+#   	  mh1.psi <- sum(dbeta(psi[W1], alpha.psi.star, beta.psi.star, log = TRUE)) + dgamma(alpha.psi.star, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi.star, alpha.beta.psi, beta.beta.psi, log = TRUE)
+  	  mh2.psi <- sum(dbeta(psi, alpha.psi, beta.psi, log = TRUE)) + dgamma(alpha.psi, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi, alpha.beta.psi, beta.beta.psi, log = TRUE)
+#       mh2.psi <- sum(dbeta(psi[W1], alpha.psi, beta.psi, log = TRUE)) + dgamma(alpha.psi, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi, alpha.beta.psi, beta.beta.psi, log = TRUE)
   		mh.psi <- exp(mh1.psi - mh2.psi)
       
 		  if(mh.psi > runif(1)){
