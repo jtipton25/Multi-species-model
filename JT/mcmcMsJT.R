@@ -101,14 +101,9 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 
     psi.tilde <- ((1 - p)^J * psi) / ((1 - p)^J * psi + (1 - psi))
     psi.tilde2 <- (1 - p)^J
-<<<<<<< HEAD
 
     for(k in (1:Omega)){#  if(W1[k]){
 		  if(W1[k]){
-=======
-		#for(k in 1:Omega){ # for k in W == 1?
-		for(k in (1:Omega)[W1]){#  if(W1[k]){
->>>>>>> e9fb171b9f1567fc55361b480dd0bd3fd98c2170
         for(i in 1:n){
 		      if(Y.aug[i, k] == 0){
 		        Z[i, k] <- rbinom(1, 1, psi.tilde[k])
@@ -120,7 +115,6 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		        Z[i, k] <- rbinom(1, 1, psi.tilde2[k])
 		      }
 		    }
-<<<<<<< HEAD
 		  }
 		}
     
@@ -146,21 +140,6 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 # 		  }
 # 		  # }
 # 		}	
-=======
-		 # }
-	  }		
-		for(k in (1:Omega)[!W1]){#  if(W1[k]){
-		  for(i in 1:n){
-		    #if(Y.aug[i, k] == 0 && W[k] == 1){
-		    #if(Y0.list[[k]][i]){
-		    if(Y.aug[i, k] == 0){
-		      # move up before for(i in 1:n)
-		      Z[i, k] <- rbinom(1, 1, psi.tilde2[k])
-		    }
-		  }
-		  # }
-		}	
->>>>>>> e9fb171b9f1567fc55361b480dd0bd3fd98c2170
 
 	  sumZ <- apply(Z, 2, sum)
 		
@@ -184,11 +163,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
       #p[sumZ > 0 & W1][ - Y1] <- rbeta(sum(sumZ > 0 & W1) - K, alpha.p + sumYZ[sumZ > 0 & W1], beta.p + sumJYZ[sumZ > 0 & W1][ - Y1]) ## all y values are 0
 		#p[W1][ - Y1] <- rbeta(sum(W1) - K, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1][ - Y1] * J) 
 		#p[W1] <- rbeta(sumW, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1]) 
-<<<<<<< HEAD
 		p <- rbeta(Omega, alpha.p + sumYZ, beta.p + sumJYZ) 
-=======
-		p <- rbeta(Omega, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1]) 
->>>>>>> e9fb171b9f1567fc55361b480dd0bd3fd98c2170
     #}
 
 	  ##
