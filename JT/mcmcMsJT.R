@@ -10,12 +10,12 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	## libraries and functions
 	##
 	
-	makeSumYZ <-function(s, Y.aug, Z){
-		Y.aug[, s] %*% Z[, s]
+	makeSumYZ <-function(s, Yaug, Z){
+		Yaug[, s] %*% Z[, s]
 	}
 	
-	makeSumJYZ <-function(s, Y.aug, Z, J){
-	  ((J - Y.aug[, s]) %*% Z[, s])
+	makeSumJYZ <-function(s, Yaug, Z, J){
+	  ((J - Yaug[, s]) %*% Z[, s])
 	}
 	
 	##
@@ -25,12 +25,13 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
   n <- dim(Y)[1]
 	K <- dim(Y)[2]
 	## Augment the data matrix				 
-	Y.aug <- cbind(Y, matrix(rep(rep(0, n), n.aug), ncol = n.aug))
+	Yaug <- cbind(Y, matrix(rep(rep(0, n), n.aug), ncol = n.aug))
 	Omega <- K + n.aug
 	## setup indexes for MCMC loop
 	Y1 <- 1:K
 	Y0 <- (K+1):Omega
-  
+  Yaug0 <- Yaug == 0
+  nYaug0 <- !Yaug0
   ##
 	## Initialize variables
 	##
@@ -46,8 +47,8 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	W[ - Y0] <- 1
 	W[Y0] <- rbinom(n.aug, 1, lambda)	
 	Z <- matrix(nrow = n, ncol = Omega)
-	Z[Y.aug > 0] <- 1 
-	Z[Y.aug == 0] <- rbinom(sum(Y.aug == 0), 1, 0.025)
+	Z[nYaug0] <- 1 
+	Z[Yaug0] <- rbinom(sum(Yaug0), 1, rep(psi, n)[Yaug0])
 	sumZ <- apply(Z, 2, sum)  
 	
 	##
@@ -74,11 +75,12 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  ## Sample W
 	  ##	
 	
-	  lambda.tilde <- ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) / ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) + (1 - lambda)))
+	  lambda.tilde <- (psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) / ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) + (1 - lambda))
 	  W[Y0] <- rbinom(n.aug, 1, lambda.tilde[Y0])
 	  W1 <- W == 1
 	  sumW <- sum(W)
-	
+	  W.mat <- matrix(rep(W1, n), nrow = n, byrow = TRUE)
+    
 	  ##
     ## Sample Z
 	  ##
@@ -86,60 +88,15 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		##
 		## work on speeding this up !!!
 		##
-		
-# 	  psi.tilde <- (1 - p)^J * psi /((1 - p)^J * psi + 1 - psi) 
-# 		for(k in 1:Omega){ # for k in W == 1?
-# 			for(i in 1:n){
-# 	  	#if(Y.aug[i, k] == 0 && W[k] == 1){
-# 		    if(Y0.list[[k]][i]){
-# 				  if(W1[k]){ # move up before for(i in 1:n)
-#    	    Z[i, k] <- rbinom(1, 1, psi.tilde[k])
-# 				  }
-# 		   }
-# 		  }
-# 	  }
 
-    psi.tilde <- ((1 - p)^J * psi) / ((1 - p)^J * psi + (1 - psi))
-    psi.tilde2 <- (1 - p)^J
+    psi.tilde <- rep(((1 - p)^J * psi) / ((1 - p)^J * psi + (1 - psi)), n)
+    psi.tilde2 <- rep((1 - p)^J, n)
 
-    for(k in (1:Omega)){#  if(W1[k]){
-		  if(W1[k]){
-        for(i in 1:n){
-		      if(Y.aug[i, k] == 0){
-		        Z[i, k] <- rbinom(1, 1, psi.tilde[k])
-		      }
-		    }
-		  } else {
-		    for(i in 1:n){
-		      if(Y.aug[i, k] == 0){
-		        Z[i, k] <- rbinom(1, 1, psi.tilde2[k])
-		      }
-		    }
-		  }
-		}
-    
-#     for(k in (1:Omega)[W1]){#  if(W1[k]){
-#         for(i in 1:n){
-# 	  	#if(Y.aug[i, k] == 0 && W[k] == 1){
-# 		      #if(Y0.list[[k]][i]){
-#           if(Y.aug[i, k] == 0){
-# 				   # move up before for(i in 1:n)
-#    	        Z[i, k] <- rbinom(1, 1, psi.tilde[k])
-# 				  }
-# 		    }
-# 		 # }
-# 	  }		
-# 		for(k in (1:Omega)[!W1]){#  if(W1[k]){
-# 		  for(i in 1:n){
-# 		    #if(Y.aug[i, k] == 0 && W[k] == 1){
-# 		    #if(Y0.list[[k]][i]){
-# 		    if(Y.aug[i, k] == 0){
-# 		      # move up before for(i in 1:n)
-# 		      Z[i, k] <- rbinom(1, 1, psi.tilde2[k])
-# 		    }
-# 		  }
-# 		  # }
-# 		}	
+    Z[Yaug0 & W.mat] <- rbinom(n * Omega, 1, psi.tilde)[Yaug0 & W.mat]
+    ##Z[Yaug0 & W.mat] <- rbinom(sum(Yaug0 & W.mat), 1, psi.tilde[Yaug0 & W.mat]) # maybe this is faster?
+    Z[Yaug0 & !W.mat] <- rbinom(n * Omega, 1, psi.tilde2)[Yaug0 & !W.mat]
+    ##Z[Yaug0 & !W.mat] <- rbinom(sum(Yaug0 & W.mat), 1, psi.tilde2[Yaug0 & !W.mat]) #maybe can take these out of loops also for speed
+    #Z[nYaug0] <- rep(1, sum(nYaug0))
 
 	  sumZ <- apply(Z, 2, sum)
 		
@@ -147,36 +104,17 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  ## Sample p
 	  ##
 		
-	  #sumYZ <- rep(0, Omega)
-	  #sumYZ[1:K] <- sapply(1:K, makeSumYZ, Y = Y, Z = Z)
-	  #sumJYZ <- rep(0, Omega)
-	  #sumJYZ[1:K] <- sapply(1:K, makeSumJYZ, Y = Y, Z = Z, J = J)
-		
-	  #for(k in 1:K){
-		#  p[k] <- rbeta(1, alpha.p + sumYZ[k], beta.p + sumJYZ[k])
-	  #}
-		
-		sumYZ <- sapply(1:Omega, makeSumYZ, Y.aug = Y.aug, Z = Z)
-		sumJYZ <- sapply(1:Omega, makeSumJYZ, Y.aug = Y.aug, Z = Z, J = J)
-		#p[Y1] <- rbeta(K, alpha.p + sumYZ[Y1], beta.p + sumJYZ[Y1])
-    #if(sum(sumZ > 0 & W1) > K){
-      #p[sumZ > 0 & W1][ - Y1] <- rbeta(sum(sumZ > 0 & W1) - K, alpha.p + sumYZ[sumZ > 0 & W1], beta.p + sumJYZ[sumZ > 0 & W1][ - Y1]) ## all y values are 0
-		#p[W1][ - Y1] <- rbeta(sum(W1) - K, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1][ - Y1] * J) 
-		#p[W1] <- rbeta(sumW, alpha.p + sumYZ[W1], beta.p + sumJYZ[W1]) 
+		sumYZ <- sapply(1:Omega, makeSumYZ, Yaug = Yaug, Z = Z)
+		sumJYZ <- sapply(1:Omega, makeSumJYZ, Yaug = Yaug, Z = Z, J = J)
 		p <- rbeta(Omega, alpha.p + sumYZ, beta.p + sumJYZ) 
-    #}
 
 	  ##
 	  ## Sample Psi
   	##
 	
-#	  for(k in 1:Omega){
-#	  	if(W1[k]){
-#    	psi[k] <- rbeta(1, alpha.psi + sumZ[k], beta.psi + n - sumZ[k])
-#		  }
-#	  }	
 		psi[W1] <- rbeta(sum(W1), alpha.psi + sumZ[W1], beta.psi + n - sumZ[W1])
     psi[!W1] <- rbeta(sum(!W1), alpha.psi, beta.psi)
+
     ##
 	  ## Sample alpha.p and beta.p
   	##
@@ -225,7 +163,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
     ## Sample lambda	
     ##				
 							
-	  #lambda <- rbeta(1, alpha.lambda + sumW - K, beta.lambda + Omega - (sumW - K))
+# 	  lambda <- rbeta(1, alpha.lambda + sumW - K, beta.lambda + Omega - (sumW - K))
 		lambda <- rbeta(1, alpha.lambda + sumW, beta.lambda + Omega - sumW)
 		
 	  ##

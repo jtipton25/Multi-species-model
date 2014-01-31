@@ -110,11 +110,18 @@ For $y_{ik} = 0$ and $W_k = 1$
   & \propto \left( (1 - p_k)^J \Psi_k \right)^{Z_{ik}} \left(1 - \Psi_k \right)^{(1 - Z_{ik})}\\
 \end{align*}
 which is Bern($\tilde{\Psi}_k$) where $\tilde{\Psi}_k = \left( (1 - p_k)^J \Psi_k \right) / \left( (1 - p_k)^J \Psi_k + (1 - \Psi_k)\right)$\\
+\\%
+For $y_{ik} = 0$ and $W_k = 0$
+\begin{align*}
+  [Z_{ik} | \cdot] & \propto [y_{ik} | J, p_k]^{Z_{ik}} I \{y_{ik} = 0 \}^{(1 - Z_{ik})} [Z_{ik} | \Psi]^{W_k} I \{Z_{ik} = 0 \}^{(1 - W_{k})}\\
+  & \propto (1 - p_k)^{J Z_{ik}} \Psi_k^{Z_{ik} W_k} (1 - \Psi_k)^{(1 - Z_{ik}) W_k}\\
+  & \propto ((1 - p_k)^J)^{Z_{ik}}\\
+\end{align*}
+which is Bern($(1 - p_k)^J$)\\
 \\
 %
 \subsection{$p_k$}
 %
-Only sample when $\sum_{i = 1}^n Z_{ik} > 0$ and $W_k = 1$
 \begin{align*}
   [p_k | \cdot] & \propto \prod_{i = 1}^n [y_{ik} | J, p_k]^{Z_{ik}} [p_k | \alpha_p, \beta_p]\\
   & \propto \prod_{i = 1}^n \left( p_k^{y_{ik}} (1 - p_k)^{J - y_{ik}} \right)^{Z_{ik}} p_k^{(\alpha_p - 1)} (1 - p_k)^{(\beta_p - 1)}\\
@@ -125,14 +132,24 @@ which is Beta($\alpha_p + \sum_{i = 1}^n y_{ik} Z_{ik}, \beta_p + \sum_{i = 1}^n
 %
 \subsection{$\Psi_k$}
 %
-Only sample when $W_k = 1$
+When $W_k = 1$
 %
 \begin{align*}
   [\Psi_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [\Psi_k | \alpha_\Psi, \beta_\Psi]\\
   & \propto \prod_{i = 1}^n \Psi_{ik}^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \Psi_k^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1)}\\
   & \propto \Psi_{ik}^{(\alpha_\Psi - 1 + \sum_{i = 1}^n Z_{ik})} (1 - \Psi_k)^{(\beta_\Psi - 1 + \sum_{i = 1}^n (1 - Z_{ik}))}
 \end{align*}
-which is Beta($\alpha_\Psi + \sum_{i = 1}^n Z_{ik}, \mbox{ } \beta_\Psi + \sum_{i = 1}^n (1 - Z_{ik}))$
+which is Beta($\alpha_\Psi + \sum_{i = 1}^n Z_{ik}, \mbox{ } \beta_\Psi + \sum_{i = 1}^n (1 - Z_{ik}))$\\
+\\
+%
+When $W_k = 0$
+%
+\begin{align*}
+  [\Psi_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [\Psi_k | \alpha_\Psi, \beta_\Psi]\\
+  & \propto \prod_{i = 1}^n \Psi_{ik}^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \Psi_k^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1)}\\
+  & \propto \Psi_{ik}^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1))}
+\end{align*}
+which is Beta($\alpha_\Psi , \mbox{ } \beta_\Psi)$
 %
 \subsection{$W_k$}
 %
@@ -148,16 +165,12 @@ which is Bern($\tilde{\lambda}$) where $\tilde{\lambda} = \left(\Psi_k^{\sum_{i 
 %
 \subsection{$\alpha_p$}
 %
-Only sample for $W_k = 1$
-%
 \begin{align*}
   [\alpha_p | \cdot] & \propto \prod_{k = 1}^\Omega [p_k | \alpha_p, \beta_p] [\alpha_p] I\{W_k = 1\}
 \end{align*}
 where $[p_k | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\alpha_p]$ is Gamma($\alpha_{\alpha_p}, \beta_{\alpha_p}$). This can be sampled using Metropolis-Hastings
 %
 \subsection{$\beta_p$}
-%
-Only sample for $W_k = 1$
 %
 \begin{align*}
   [\beta_p | \cdot] & \propto \prod_{k = 1}^\Omega [p_k | \alpha_p, \beta_p] [\beta_p] I\{W_k = 1\}
@@ -166,16 +179,12 @@ where $[p_k | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\beta_p]$ i
 %
 \subsection{$\alpha_\Psi$}
 %
-Only sample for $W_k = 1$
-%
 \begin{align*}
   [\alpha_\Psi | \cdot] & \propto \prod_{k = 1}^\Omega [\Psi_k | \alpha_\Psi, \beta_\Psi] [\alpha_\Psi] I\{W_k = 1\}
 \end{align*}
 where $[\Psi_k | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) and $[\alpha_\Psi]$ is Gamma($\alpha_{\alpha_\Psi}, \beta_{\alpha_\Psi}$). This can be sampled using Metropolis-Hastings
 %
 \subsection{$\beta_\Psi$}
-%
-Only sample for $W_k = 1$
 %
 \begin{align*}
   [\beta_\Psi | \cdot] & \propto \prod_{k = 1}^\Omega [\Psi_k | \alpha_\Psi, \beta_\Psi] [\beta_\Psi] I\{W_k = 1\}
