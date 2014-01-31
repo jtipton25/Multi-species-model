@@ -30,7 +30,11 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	## setup indexes for MCMC loop
 	Y1 <- 1:K
 	Y0 <- (K+1):Omega
+<<<<<<< HEAD
   Yaug0 <- Yaug == 0
+=======
+  Yaug0 <- Y.aug == 0
+>>>>>>> 90117993b7ed9b1593530120058dff4d4702af5d
   nYaug0 <- !Yaug0
   ##
 	## Initialize variables
@@ -47,8 +51,13 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	W[ - Y0] <- 1
 	W[Y0] <- rbinom(n.aug, 1, lambda)	
 	Z <- matrix(nrow = n, ncol = Omega)
+<<<<<<< HEAD
 	Z[nYaug0] <- 1 
 	Z[Yaug0] <- rbinom(sum(Yaug0), 1, rep(psi, n)[Yaug0])
+=======
+	Z[Y.aug > 0] <- 1 
+	Z[Y.aug == 0] <- rbinom(sum(Y.aug == 0), 1, 0.25)
+>>>>>>> 90117993b7ed9b1593530120058dff4d4702af5d
 	sumZ <- apply(Z, 2, sum)  
 	
 	##
@@ -104,8 +113,13 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  ## Sample p
 	  ##
 		
+<<<<<<< HEAD
 		sumYZ <- sapply(1:Omega, makeSumYZ, Yaug = Yaug, Z = Z)
 		sumJYZ <- sapply(1:Omega, makeSumJYZ, Yaug = Yaug, Z = Z, J = J)
+=======
+		sumYZ <- sapply(1:Omega, makeSumYZ, Y.aug = Y.aug, Z = Z)
+		sumJYZ <- sapply(1:Omega, makeSumJYZ, Y.aug = Y.aug, Z = Z, J = J)
+>>>>>>> 90117993b7ed9b1593530120058dff4d4702af5d
 		p <- rbeta(Omega, alpha.p + sumYZ, beta.p + sumJYZ) 
 
 	  ##

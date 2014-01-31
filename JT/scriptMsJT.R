@@ -88,8 +88,13 @@ abline(v = (N - dim(data$Y)[2]) / n.aug, col = 'red')
 
 n.mcmc <- 5000
 n.burn <- floor(n.mcmc / 5)
+<<<<<<< HEAD
 alpha.p.tune <- 0.05
 beta.p.tune <- 0.05
+=======
+alpha.p.tune <- 0.075
+beta.p.tune <- 0.075
+>>>>>>> 90117993b7ed9b1593530120058dff4d4702af5d
 alpha.psi.tune <- 0.15
 beta.psi.tune <- 0.15
 
