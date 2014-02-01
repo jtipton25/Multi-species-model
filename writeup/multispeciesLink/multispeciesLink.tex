@@ -103,13 +103,22 @@ where $W_k$ is an indicator of whether an augmented species exists or not in the
 %
 For $y_{ik} = 1$, $Z_{ik} = 1$.\\
 \\
-For $y_{ik} = 0$
+For $y_{ik} = 0$ and $W_k = 1$
 \begin{align*}
   [Z_{ik} | \cdot] & \propto [y_{ik} | J, p_k]^{Z_{ik}} I \{y_{ik} = 0 \}^{(1 - Z_{ik})} [Z_{ik} | \Psi]^{W_k} I \{Z_{ik} = 0 \}^{(1 - W_{k})}\\
   & \propto (1 - p_k)^{J Z_{ik}} \Psi_k^{Z_{ik} W_k} (1 - \Psi_k)^{(1 - Z_{ik}) W_k}\\
-  & \propto \left( (1 - p_k)^J \Psi_k^{W_k} \right)^{Z_{ik}} \left((1 - \Psi_k)^{W_k} \right)^{(1 - Z_{ik})}\\
+  & \propto \left( (1 - p_k)^J \Psi_k \right)^{Z_{ik}} \left(1 - \Psi_k \right)^{(1 - Z_{ik})}\\
 \end{align*}
-which is Bern($\tilde{\Psi}_k$) where $\tilde{\Psi}_k = \left( (1 - p_k)^J \Psi_k^{W_k} \right) / \left( (1 - p_k)^J \Psi_k^{W_k} + (1 - \Psi_k)^{W_k}\right)$\\
+which is Bern($\tilde{\Psi}_k$) where $\tilde{\Psi}_k = \left( (1 - p_k)^J \Psi_k \right) / \left( (1 - p_k)^J \Psi_k + (1 - \Psi_k)\right)$\\
+\\%
+For $y_{ik} = 0$ and $W_k = 0$
+\begin{align*}
+  [Z_{ik} | \cdot] & \propto [y_{ik} | J, p_k]^{Z_{ik}} I \{y_{ik} = 0 \}^{(1 - Z_{ik})} [Z_{ik} | \Psi]^{W_k} I \{Z_{ik} = 0 \}^{(1 - W_{k})}\\
+  & \propto (1 - p_k)^{J Z_{ik}} \Psi_k^{Z_{ik} W_k} (1 - \Psi_k)^{(1 - Z_{ik}) W_k}\\
+  & \propto ((1 - p_k)^J)^{Z_{ik}}\\
+\end{align*}
+which is Bern($(1 - p_k)^J$)\\
+\\
 %
 \subsection{$p_k$}
 %
@@ -123,37 +132,36 @@ which is Beta($\alpha_p + \sum_{i = 1}^n y_{ik} Z_{ik}, \beta_p + \sum_{i = 1}^n
 %
 \subsection{$\Psi_k$}
 %
+When $W_k = 1$
+%
 \begin{align*}
   [\Psi_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [\Psi_k | \alpha_\Psi, \beta_\Psi]\\
-  & \propto \prod_{i = 1}^n \Psi_{ik}^{Z_{ik} W_k} (1 - \Psi_k)^{(1 - Z_{ik}) W_k} \Psi_k^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1)}\\
-  & \propto \Psi_{ik}^{(\alpha_\Psi - 1 + \sum_{i = 1}^n Z_{ik} W_k)} (1 - \Psi_k)^{(\beta_\Psi - 1 + \sum_{i = 1}^n (1 - Z_{ik}) W_k)}
+  & \propto \prod_{i = 1}^n \Psi_{ik}^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \Psi_k^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1)}\\
+  & \propto \Psi_{ik}^{(\alpha_\Psi - 1 + \sum_{i = 1}^n Z_{ik})} (1 - \Psi_k)^{(\beta_\Psi - 1 + \sum_{i = 1}^n (1 - Z_{ik}))}
 \end{align*}
-which is Beta($\alpha_\Psi + \sum_{i = 1}^n Z_{ik} W_k, \mbox{ } \beta_\Psi + \sum_{i = 1}^n (1 - Z_{ik}) W_k)$\\
+which is Beta($\alpha_\Psi + \sum_{i = 1}^n Z_{ik}, \mbox{ } \beta_\Psi + \sum_{i = 1}^n (1 - Z_{ik}))$\\
 \\
 %
-% When $W_k = 0$
-% %
-% \begin{align*}
-%   [\Psi_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [\Psi_k | \alpha_\Psi, \beta_\Psi]\\
-%   & \propto \prod_{i = 1}^n \Psi_k^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1)}\\
-%   & \propto \Psi_{ik}^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1))}
-% \end{align*}
-% which is Beta($\alpha_\Psi , \mbox{ } \beta_\Psi)$
+When $W_k = 0$
+%
+\begin{align*}
+  [\Psi_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [\Psi_k | \alpha_\Psi, \beta_\Psi]\\
+  & \propto \prod_{i = 1}^n \Psi_{ik}^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \Psi_k^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1)}\\
+  & \propto \Psi_{ik}^{(\alpha_\Psi - 1)} (1 - \Psi_k)^{(\beta_\Psi - 1))}
+\end{align*}
+which is Beta($\alpha_\Psi , \mbox{ } \beta_\Psi)$
 %
 \subsection{$W_k$}
 %
+Only sample for $\sum_{i = 1}^{n} y_{ik} = 0$
+%
 \begin{align*}
-  [W_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} I\{Z_{ik} = 0\}^{(1 - W_k)} [W_k | \lambda]\\
-  & \propto \prod_{i = 1}^n \Psi_k^{(Z_{ik} W_k)} (1 - \Psi_k)^{\left( (1 - Z_{ik}) W_k \right)} I\{Z_{ik} = 0\}^{(1 - W_k)} \lambda^{W_k} (1 - \lambda)^{(1 - W_k)}\\
-  & \propto \prod_{i = 1}^n \left(\Psi_k^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \lambda \right)^{W_k} \left( I\{Z_{ik} = 0\} * (1 - \lambda)\right)^{(1 - W_k)}\\
-    & \propto \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda \right)^{W_k} \left( I\{\sum_{i = 1}^n Z_{ik} = 0\} * (1 - \lambda)\right)^{(1 - W_k)}\\
+  [W_k | \cdot] & \propto \prod_{i = 1}^n [Z_{ik} | \Psi_k]^{W_k} [W_k | \lambda]\\
+  & \propto \prod_{i = 1}^n \Psi_k^{(Z_{ik} W_k)} (1 - \Psi_k)^{\left( (1 - Z_{ik}) W_k \right)} \lambda^{W_k} (1 - \lambda)^{(1 - W_k)}\\
+  & \propto \prod_{i = 1}^n \left(\Psi_k^{Z_{ik}} (1 - \Psi_k)^{(1 - Z_{ik})} \lambda \right)^{W_k} (1 - \lambda)^{(1 - W_k)}\\
 \end{align*}
 %
-% which is Bern($\tilde{\lambda}$) where $\tilde{\lambda} = \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda \right) / \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda + (1 - \lambda) \right)$\\
-\\
-If $\sum_{i = 1}^n Z_{ik} > 0$ then set $W_k = 1$ otherwise sample $W_k$ as Bern($\tilde{\lambda}$) where $\tilde{\lambda} = \left((1 - \Psi_k)^n \lambda \right) / \left((1 - \Psi_k)^n \lambda + (1 - \lambda) \right)$\\\\
-\\
-
+which is Bern($\tilde{\lambda}$) where $\tilde{\lambda} = \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda \right) / \left(\Psi_k^{\sum_{i = 1}^n Z_{ik}} (1 - \Psi_k)^{\sum_{i = 1}^n (1 - Z_{ik})} \lambda + (1 - \lambda) \right)$
 %
 \subsection{$\alpha_p$}
 %
