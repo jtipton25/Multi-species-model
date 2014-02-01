@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  31 JAN 2014 19:20
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  31 JAN 2014 19:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -233,29 +233,34 @@ Underfull \hbox (badness 10000) in paragraph at lines 111--114
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 132--138
+Underfull \hbox (badness 10000) in paragraph at lines 130--143
 
  []
 
 
-Overfull \hbox (23.17567pt too wide) in paragraph at lines 152--158
+Underfull \hbox (badness 10000) in paragraph at lines 130--143
+
+ []
+
+
+Overfull \hbox (23.17567pt too wide) in paragraph at lines 150--156
 \OT1/cmr/m/n/10 If $[][] \OML/cmm/m/it/10 Z[] > \OT1/cmr/m/n/10 0$ then set $\O
 ML/cmm/m/it/10 W[] \OT1/cmr/m/n/10 = 1$ oth-er-wise sam-ple $\OML/cmm/m/it/10 W
 []$ \OT1/cmr/m/n/10 as Bern($[]$) where $[] = [] \OML/cmm/m/it/10 = []$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 152--158
+Underfull \hbox (badness 10000) in paragraph at lines 150--156
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 152--158
+Underfull \hbox (badness 10000) in paragraph at lines 150--156
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 152--158
+Underfull \hbox (badness 10000) in paragraph at lines 150--156
 
  []
 
@@ -287,7 +292,7 @@ sfonts/cm/cmr7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmr8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmsy10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmsy7.pfb>
-Output written on multispeciesModelling.pdf (4 pages, 181980 bytes).
+Output written on multispeciesModelling.pdf (4 pages, 181735 bytes).
 PDF statistics:
  89 PDF objects out of 1000 (max. 8388607)
  64 compressed objects within 1 object stream
