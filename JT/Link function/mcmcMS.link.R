@@ -74,19 +74,12 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  ##
 	  ## Sample W
 	  ##	
-
-		lambda.tilde <- (psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) / ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) + (1 - lambda))
-		W[Y0] <- rbinom(n.aug, 1, lambda.tilde[Y0])
-		W1 <- W == 1
-		sumW <- sum(W)
-		W.mat <- matrix(rep(W1, n), nrow = n, byrow = TRUE)
-    
-# 	  lambda.tilde <- (psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) / ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) + (1 - lambda))
-# 	  W[Z.idx] <- 1
-#     W[!Z.idx] <- rbinom(sum(!Z.idx), 1, lambda.tilde[!Z.idx])
-# 	  W1 <- W == 1
-# 	  sumW <- sum(W)
-# 	  W.mat <- matrix(rep(W1, n), nrow = n, byrow = TRUE)
+	
+	  lambda.tilde <- (psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) / ((psi^sumZ * (1 - psi) ^ (n - sumZ) * lambda) + (1 - lambda))
+	  W[Y0] <- rbinom(n.aug, 1, lambda.tilde[Y0])
+	  W1 <- W == 1
+	  sumW <- sum(W)
+	  W.mat <- matrix(rep(W1, n), nrow = n, byrow = TRUE)
     
 	  ##
     ## Sample Z
@@ -96,19 +89,17 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		## work on speeding this up !!!
 		##
 
-#     psi.tilde <- rep(((1 - p)^J * psi) / ((1 - p)^J * psi + (1 - psi)), n)
-		psi.tilde <- rep(((1 - p)^J * psi^W) / ((1 - p)^J * psi^W + (1 - psi)^W), n)
-#     psi.tilde2 <- rep((1 - p)^J, n)
+    psi.tilde <- rep(((1 - p)^J * psi) / ((1 - p)^J * psi + (1 - psi)), n)
+    psi.tilde2 <- rep((1 - p)^J, n)
 
-		Z[Yaug0] <- rbinom(n * Omega, 1, psi.tilde)[Yaug0]
-#     Z[Yaug0 & W.mat] <- rbinom(n * Omega, 1, psi.tilde)[Yaug0 & W.mat]
+    Z[Yaug0 & W.mat] <- rbinom(n * Omega, 1, psi.tilde)[Yaug0 & W.mat]
     ##Z[Yaug0 & W.mat] <- rbinom(sum(Yaug0 & W.mat), 1, psi.tilde[Yaug0 & W.mat]) # maybe this is faster?
-#     Z[Yaug0 & !W.mat] <- rbinom(n * Omega, 1, psi.tilde2)[Yaug0 & !W.mat]
+    Z[Yaug0 & !W.mat] <- rbinom(n * Omega, 1, psi.tilde2)[Yaug0 & !W.mat]
     ##Z[Yaug0 & !W.mat] <- rbinom(sum(Yaug0 & W.mat), 1, psi.tilde2[Yaug0 & !W.mat]) #maybe can take these out of loops also for speed
     #Z[nYaug0] <- rep(1, sum(nYaug0))
 
 	  sumZ <- apply(Z, 2, sum)
-# 		Z.idx <- sumZ > 0
+		
 	  ## 
 	  ## Sample p
 	  ##
