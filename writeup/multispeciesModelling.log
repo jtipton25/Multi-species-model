@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  31 JAN 2014 19:20
+=======
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  31 JAN 2014 18:34
+>>>>>>> 7a2a6bbf2adb67ac30b493c9088cf6a022f69570
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -229,6 +233,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 104--107
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 111--114
+<<<<<<< HEAD
 
  []
 
@@ -256,6 +261,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 152--158
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 152--158
+=======
+
+ []
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 132--138
+>>>>>>> 7a2a6bbf2adb67ac30b493c9088cf6a022f69570
 
  []
 
@@ -287,7 +299,11 @@ sfonts/cm/cmr7.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmr8.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmsy10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmsy7.pfb>
+<<<<<<< HEAD
 Output written on multispeciesModelling.pdf (4 pages, 181980 bytes).
+=======
+Output written on multispeciesModelling.pdf (4 pages, 180936 bytes).
+>>>>>>> 7a2a6bbf2adb67ac30b493c9088cf6a022f69570
 PDF statistics:
  89 PDF objects out of 1000 (max. 8388607)
  64 compressed objects within 1 object stream
