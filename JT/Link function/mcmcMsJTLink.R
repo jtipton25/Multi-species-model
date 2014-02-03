@@ -4,7 +4,7 @@
 ## Created 1.17.2014 John Tipton
 ##
 
-mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init){ # Y is a matrix of binomial counts
+mcmcMS <- function(Y, U, V, n.aug, mu.beta, sigma.squared.beta, mu.eta, sigma.squared.eta, alpha.lambda, beta.lambda, beta.tune, eta.tune, n.mcmc, Z.init){ # Y is a matrix of binomial counts
 	
 	##
 	## libraries and functions
@@ -37,13 +37,12 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
   ##
 	## Initialize variables
 	##
-	
-	alpha.p <- rgamma(1, alpha.alpha.p, beta.alpha.p)
-	beta.p <- rgamma(1, alpha.beta.p, beta.beta.p)
-	alpha.psi <- rgamma(1, alpha.alpha.psi, beta.alpha.psi)
-	beta.psi <- rgamma(1, alpha.beta.psi, beta.beta.psi)
-	lambda <- rbeta(1, alpha.lambda, beta.lambda)
-	p <- rbeta(Omega, alpha.p, beta.p)
+	tau.beta <- length(mu.beta)
+  beta <- rmvnorm(1, mu.beta, sigma.squared.beta * diag(tau.beta))
+  tau.eta <- length(mu.eta)  
+  eta <- rnmnorm(1, mut.eta, sigma.squared.eta * diag(tau.eta))
+  lambda <- rbeta(1, alpha.lambda, beta.lambda)
+	p <- expit(U)
 	psi <- rbeta(Omega, alpha.psi, beta.psi)
 	W <- vector(length = Omega)
 	W[Y1] <- 1
@@ -60,13 +59,11 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	p.save <- matrix(nrow = Omega, ncol = n.mcmc)
 	psi.save <- matrix(nrow = Omega, ncol = n.mcmc)
 	N.save <- vector(length = n.mcmc)
-	alpha.p.save <- vector(length = n.mcmc)
-	beta.p.save <- vector(length = n.mcmc)
-	alpha.psi.save <- vector(length = n.mcmc)
-	beta.psi.save <- vector(length = n.mcmc)
+	beta.save <- vector(length = n.mcmc)
+	eta.save <- vector(length = n.mcmc)
 	lambda.save <- vector(length = n.mcmc)
-	p.accept <- 0
-	psi.accept <- 0
+	beta.accept <- 0
+	eta.accept <- 0
 	
 	for(l in 1:n.mcmc){
 		if(l %% 100 == 0){
@@ -111,16 +108,15 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 		psi <- rbeta(Omega, alpha.psi + sumZ * W, beta.psi + (n - sumZ) * W)
 		
     ##
-	  ## Sample alpha.p and beta.p
+	  ## Sample beta
   	##
 		
-	  alpha.p.star <- rnorm(1, alpha.p, alpha.p.tune)
-	  beta.p.star <- rnorm(1, beta.p, beta.p.tune)
-  	if(alpha.p.star > 0 & beta.p.star > 0){
-		  mh1.p <- sum(dbeta(p, alpha.p.star, beta.p.star, log = TRUE)) + dgamma(alpha.p.star, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p.star, alpha.beta.p, beta.beta.p, log = TRUE)
-# 		  mh1.p <- sum(dbeta(p[W1], alpha.p.star, beta.p.star, log = TRUE)) + dgamma(alpha.p.star, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p.star, alpha.beta.p, beta.beta.p, log = TRUE)
+    
+    ## need to think about how to use covariates
+	  beta.star <- rnorm(2, beta, beta.tune)
+      p.star <- expit(beta.star %*% U)
+		  mh1.beta <- sum(dbinom(Yaug, J, p.star, log = TRUE)) + dgamma(alpha.p.star, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p.star, alpha.beta.p, beta.beta.p, log = TRUE)
 	  	mh2.p <- sum(dbeta(p, alpha.p, beta.p, log = TRUE)) + dgamma(alpha.p, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p, alpha.beta.p, beta.beta.p, log = TRUE)
-# 		  mh2.p <- sum(dbeta(p[W1], alpha.p, beta.p, log = TRUE)) + dgamma(alpha.p, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p, alpha.beta.p, beta.beta.p, log = TRUE)
   		mh.p <- exp(mh1.p - mh2.p)
 		
 		  if(mh.p > runif(1)){
@@ -128,7 +124,6 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
   			beta.p <- beta.p.star
 			  p.accept <- p.accept + 1 / n.mcmc
 		  }
-	  }
     rm(alpha.p.star)
     rm(beta.p.star)	
 
@@ -167,12 +162,9 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
   	p.save[, l] <- p # matrix(nrow = Omega, ncol = n.mcmc)
 	  psi.save[, l] <- psi # matrix(nrow = Omega, ncol = n.mcmc)
   	N.save[l] <- sumW # vector(length = n.mcmc)
-	  alpha.p.save[l] <- alpha.p # vector(length = n.mcmc)
-  	beta.p.save[l] <- beta.p # vector(length = n.mcmc)
-	  alpha.psi.save[l] <- alpha.psi # vector(length = n.mcmc)
-  	beta.psi.save[l] <- beta.psi # vector(length = n.mcmc)	
+  	beta.save[l] <- beta # vector(length = n.mcmc)
+  	eta.save[l] <- eta # vector(length = n.mcmc)	
 		lambda.save[l] <- lambda
-    Z.save <- Z.save + 1 / n.mcmc * Z
   }
-	list(p.save = p.save, psi.save = psi.save, N.save = N.save, alpha.p.save = alpha.p.save, beta.p.save = beta.p.save, alpha.psi.save = alpha.psi.save, beta.psi.save = beta.psi.save, lambda.save = lambda.save, p.accept = p.accept, psi.accept = psi.accept, Z.save = Z.save)
+	list(p.save = p.save, psi.save = psi.save, N.save = N.save, beta.save = beta.save, eta.save = eta.save, lambda.save = lambda.save, beta.accept = beta.accept, eta.accept = eta.accept, Z.save = Z.save)
 }
