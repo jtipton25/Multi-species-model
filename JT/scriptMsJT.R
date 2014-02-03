@@ -33,14 +33,13 @@ curve(dbeta(x, alpha.p, beta.p))
 ## Sample data
 ##
 
-data <- makeMultiSpec(n, N, J, alpha.psi, beta.psi, alpha.p, beta.p)
+data <- makeMultiSpec(n, N, J, alpha.p, beta.p, alpha.psi, beta.psi)
 
 hist(data$p, freq = FALSE)
 curve(dbeta(x, alpha.p, beta.p), add = TRUE, col = 'red')
 
 hist(data$psi, freq = FALSE)
 curve(dbeta(x, alpha.psi, beta.psi), add = TRUE, col = 'red')
-
 
 ##
 ## Set up hyperpriors knowing the true values
@@ -82,11 +81,12 @@ alpha.lambda <- 1.5
 beta.lambda <- 5
 curve(dbeta(x, alpha.lambda, beta.lambda))
 abline(v = (N - dim(data$Y)[2]) / n.aug, col = 'red')
+
 ##
 ## Initialize MCMC parameters
 ##
 
-n.mcmc <- 5000
+n.mcmc <- 20000
 n.burn <- floor(n.mcmc / 5) + 1
 alpha.p.tune <- 0.05
 beta.p.tune <- 0.05
@@ -102,9 +102,7 @@ finish
 dim(data$Y)[2]
 N
 
-make.plot(out)
+make.plot(out) ## seems to be biased large...
 names(out)
 
-out$N.save
-out$Z.save
 

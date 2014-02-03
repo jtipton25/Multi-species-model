@@ -172,7 +172,6 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	  alpha.psi.save[l] <- alpha.psi # vector(length = n.mcmc)
   	beta.psi.save[l] <- beta.psi # vector(length = n.mcmc)	
 		lambda.save[l] <- lambda
-    Z.save <- Z.save + 1 / n.mcmc * Z
   }
-	list(p.save = p.save, psi.save = psi.save, N.save = N.save, alpha.p.save = alpha.p.save, beta.p.save = beta.p.save, alpha.psi.save = alpha.psi.save, beta.psi.save = beta.psi.save, lambda.save = lambda.save, p.accept = p.accept, psi.accept = psi.accept, Z.save = Z.save)
+	list(p.save = p.save, psi.save = psi.save, N.save = N.save, alpha.p.save = alpha.p.save, beta.p.save = beta.p.save, alpha.psi.save = alpha.psi.save, beta.psi.save = beta.psi.save, lambda.save = lambda.save, p.accept = p.accept, psi.accept = psi.accept)
 }
