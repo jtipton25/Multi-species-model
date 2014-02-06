@@ -7,6 +7,7 @@
 ##
 
 makeMultiSpec <- function(n, N, J, alpha.p, beta.p, alpha.psi, beta.psi){
+  ## try simulating from the hyper prior distribution
   
   Y.full <- matrix(nrow = n, ncol = N)
   Z <- matrix(nrow = n, ncol = N)

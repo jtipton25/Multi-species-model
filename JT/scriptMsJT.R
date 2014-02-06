@@ -13,9 +13,9 @@ source('mcmcMsJT.R')
 ## Initialize simulation parameters
 ##
 
-n <- 50 #25
-N <- 500 #300
-J <- 2 #4
+n <- 30 #25
+N <- 60 #300
+J <- 3 #4
 
 # presence probability
 alpha.psi <- 5
@@ -86,7 +86,7 @@ abline(v = (N - dim(data$Y)[2]) / n.aug, col = 'red')
 ## Initialize MCMC parameters
 ##
 
-n.mcmc <- 20000
+n.mcmc <- 1000
 n.burn <- floor(n.mcmc / 5) + 1
 alpha.p.tune <- 0.05
 beta.p.tune <- 0.05
