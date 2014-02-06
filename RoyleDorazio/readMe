@@ -1,0 +1,11 @@
+“breedingBirdData.txt” is an example data set in ASCII comma-delimited format. Each row corresponds to data for a single species observed in the avian survey. The 50 columns correspond to 50 sample locations.
+
+“butterflyData.txt” is an example data set in ASCII comma-delimited format. Each row corresponds to data for a single species observed in the butterfly survey. The 20 columns correspond to 20 sample locations.
+
+“ExampleSession.txt” illustrates an example session in R where the butterfly data are read into memory and then analyzed using the R and WinBUGS code.
+
+“MultiSpeciesSiteOcc.R” defines an R function for fitting the model of species occurrence and detection to data. This function specifies a Gibbs sampler wherein 55000 random draws are computed for each of 4 different Markov chains. These computations may require nontrivial execution times. For example, analysis of the avian data required about 4 hours using a computer equipped with a 3.20 GHz Pentium 4 processor. Analysis of the butterfly data required about 1.5 hours.
+
+“MultiSpeciesSiteOccModel.txt” contains WinBUGS code for specifying the model of species occurrence and detection.
+
+“CumNumSpeciesPresent.R” defines an R function for computing a sample of the posterior-predictive distribution of a species-accumulation curve whose abscissa ranges from 1 to nsites sites.

@@ -1,0 +1,50 @@
+>
+> X = as.matrix(read.csv("butterflyData.txt"))
+> nrepls = 18
+> butterfly = MultiSpeciesSiteOcc(nrepls, X)
+>
+> summary(butterfly$fit$sims.matrix)
+     alpha               beta             rho              sigma.u
+ Min.   :-0.04484   Min.   :-3.300   Min.   :-0.08597   Min.   :0.3173
+ 1st Qu.: 0.99990   1st Qu.:-2.019   1st Qu.: 0.75785   1st Qu.:0.7927
+ Median : 1.18800   Median :-1.853   Median : 0.86075   Median :0.9740
+ Mean   : 1.17635   Mean   :-1.861   Mean   : 0.81902   Mean   :0.9982
+ 3rd Qu.: 1.36525   3rd Qu.:-1.689   3rd Qu.: 0.92822   3rd Qu.:1.1730
+ Max.   : 2.13100   Max.   :-1.048   Max.   : 0.99740   Max.   :2.5140
+    sigma.v           omega              N            deviance
+ Min.   :0.6862   Min.   :0.1219   Min.   :28.00   Min.   :1696
+ 1st Qu.:1.0410   1st Qu.:0.2002   1st Qu.:28.00   1st Qu.:1784
+ Median :1.1620   Median :0.2245   Median :28.00   Median :1806
+ Mean   :1.1814   Mean   :0.2264   Mean   :28.57   Mean   :1807
+ 3rd Qu.:1.3013   3rd Qu.:0.2514   3rd Qu.:29.00   3rd Qu.:1829
+ Max.   :2.4400   Max.   :0.3682   Max.   :40.00   Max.   :1936
+>
+> alpha.post = butterfly$fit$sims.matrix[,"alpha"]
+> sigmaU.post = butterfly$fit$sims.matrix[,"sigma.u"]
+> N.post = butterfly$fit$sims.matrix[,"N"]
+>
+> nsites = 8
+> CumNumSpeciesPresent(nsites, alpha.post, sigmaU.post, N.post)
+$meanAndquantiles
+      [,1]    [,2]    [,3]    [,4]   [,5]   [,6]    [,7]   [,8]
+[1,] 20.65 25.4485 27.0035 27.6285 27.933 28.123 28.2445 28.329
+[2,] 16.00 22.0000 24.0000 25.0000 26.000 26.000 27.0000 27.000
+[3,] 25.00 28.0000 29.0000 29.0000 30.000 30.000 30.0000 30.000
+
+$summaryStats
+       X1              X2              X3              X4
+ Min.   :11.00   Min.   :14.00   Min.   :19.00   Min.   :20.00
+ 1st Qu.:19.00   1st Qu.:24.00   1st Qu.:26.00   1st Qu.:27.00
+ Median :21.00   Median :26.00   Median :27.00   Median :28.00
+ Mean   :20.65   Mean   :25.45   Mean   :27.00   Mean   :27.63
+ 3rd Qu.:23.00   3rd Qu.:27.00   3rd Qu.:28.00   3rd Qu.:28.00
+ Max.   :29.00   Max.   :32.00   Max.   :37.00   Max.   :38.00
+       X5              X6              X7              X8
+ Min.   :22.00   Min.   :22.00   Min.   :23.00   Min.   :24.00
+ 1st Qu.:27.00   1st Qu.:28.00   1st Qu.:28.00   1st Qu.:28.00
+ Median :28.00   Median :28.00   Median :28.00   Median :28.00
+ Mean   :27.93   Mean   :28.12   Mean   :28.24   Mean   :28.33
+ 3rd Qu.:28.00   3rd Qu.:29.00   3rd Qu.:29.00   3rd Qu.:29.00
+ Max.   :38.00   Max.   :39.00   Max.   :39.00   Max.   :39.00
+
+>
