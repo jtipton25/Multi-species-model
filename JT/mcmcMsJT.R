@@ -4,7 +4,7 @@
 ## Created 1.17.2014 John Tipton
 ##
 
-mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init){ # Y is a matrix of binomial counts
+mcmcMS <- function(Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init){ # Y is a matrix of binomial counts
 	
 	##
 	## libraries and functions
@@ -26,6 +26,7 @@ mcmcMS <- function(Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.bet
 	K <- dim(Y)[2]
 	## Augment the data matrix				 
 	Yaug <- cbind(Y, matrix(rep(rep(0, n), n.aug), ncol = n.aug))
+#   Yaug <- cbind(Y, matrix(rep(rep(0, n), ncol = n.aug), nrow = n.aug))
 	Omega <- K + n.aug
 	## setup indexes for MCMC loop
   Y0 <- apply(Yaug, 2, sum) == 0

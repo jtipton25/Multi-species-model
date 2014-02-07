@@ -1,9 +1,18 @@
 set.seed(1)
+
+##
+## load data
+##
+setwd('~/Multi-species-model/RoyleDorazio/')
+X = as.matrix(read.csv("butterflyData.txt"))
+J = 18 # number revisits for butterfly data
+
 setwd('~/Multi-species-model/JT/')
 
 ##
 ## Libraries and functions
 ##
+
 
 source('make.plot.R')
 source('simMsJT.R')
@@ -86,16 +95,18 @@ abline(v = (N - dim(data$Y)[2]) / n.aug, col = 'red')
 ## Initialize MCMC parameters
 ##
 
-n.mcmc <- 1000
+n.mcmc <- 5000
 n.burn <- floor(n.mcmc / 5) + 1
 alpha.p.tune <- 0.05
 beta.p.tune <- 0.05
 alpha.psi.tune <- 0.15
 beta.psi.tune <- 0.15
-Z.init <- 0.015
+Z.init <- 0.005
 
 start <- Sys.time()
-out <- mcmcMS(data$Y, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init)
+# out <- mcmcMS(data$Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init)
+out <- mcmcMS(t(X), J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init)
+
 finish <- Sys.time() - start
 finish
 
