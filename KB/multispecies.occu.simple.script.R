@@ -8,61 +8,99 @@ setwd("/Users/broms/Dropbox/HootenClass_Fall2013/ZIP_and_Occupancy/MultispeciesM
 ### Simulate the data.
 ###
 
-J <- 4    # number of surveys
-N <- 200  # number of species
-n <- 25  # number of sites
+K <- 3    # number of surveys; previously called J
+N <- 300  # true number of species
+J <- 25  # number of sites; previously called n
 
-Omega = 300  # number of "possible species"
+Omega = 400  # number of "possible species"
 #lambda <- N / Omega  # probability of being a "real" species
 
 curve( dbeta(x, 2, 4) )
 curve( dbeta(x, 1, 3) )
 
-alpha.p <- 1.5
-beta.p <- 8
-alpha.psi <- 3
-beta.psi <- 3
-curve( dbeta(x, 1.5,8) )
-curve( dbeta(x, 3, 3) )
+ALPHA.p <- 1.5
+BETA.p <-  8
+ALPHA.psi <- 0.4  #3
+BETA.psi <- 0.4  #3
+curve( dbeta(x, 1.5, 8) )
+curve( dbeta(x, 0.4, 0.4) )
 
 # ***** Assuming that detection and occupancy probabilities are independent. ******
-det.prob <- rbeta(N, alpha.p, beta.p)
-occu.prob <- rbeta(N, alpha.psi, beta.psi)
+det.prob <- rbeta(N, ALPHA.p, BETA.p)
+occu.prob <- rbeta(N, ALPHA.psi, BETA.psi)
 
-z <- matrix(0, nrow=n, ncol=Omega)
+z <- matrix(NA, nrow=Omega, ncol=J)
 tmp.y <- z
 for(k in 1:N){
-  z[, k] <- rbinom(n, 1, occu.prob[k])
-  tmp.y[, k] <- rbinom(n, J, det.prob[k]) * z[, k]
+  z[k, ] <- rbinom(J, 1, occu.prob[k])
+  tmp.y[k, ] <- rbinom(J, K, det.prob[k]) * z[k, ]
 }
-(realizedN <- length( which(apply(z, 2, sum) > 0) ) )  # N = 200 of the 200 possible birds actually occupy a site
-y <- tmp.y[ , which(apply(tmp.y, 2, sum) > 0)]
-dim(y)   # 181 birds ever observed
+(realizedN <- length( which(apply(z, 1, sum) > 0) ) )  # N = 200 of the 200 possible birds actually occupy a site
+y <- tmp.y[which(apply(tmp.y, 1, sum) > 0), ]
+dim(y)   # 274 of 300 birds ever observed
+n <- dim(y)[1]
+in.dat <- y
 
 ###
 ### Run the model on the data.
 ###
-tune <- 0.2
-source("multispp.occu.simple.mcmc.R")
-out <- multispp.occu.simple.mcmc(y, J, n.mcmc=200,
+tune <- 0.1
+source("multispp.occu.simple.mcmc_LessIndexing.R")
+out <- multispp.occu.simple.mcmc(y, K, N=N, N.MCMC=5000,
 			alpha.psi.tune=tune, beta.psi.tune=tune,
 			alpha.p.tune=tune, beta.p.tune=tune)
-outB <- more.mcmc(out, 200)
+#outB <- more.mcmc(out, 1000)
+
+
 #
 #  With vaguer priors:
-tune=0.5
-source("multispp.occu.simple.mcmc.R")
-out2 <- multispp.occu.simple.mcmc(y, J, n.mcmc=2000, Omega=250,
+tune=0.8
+tune.psi=0.2
+source("multispp.occu.simple.mcmc_LessIndexing.R")
+out2 <- multispp.occu.simple.mcmc(y, K,  N=N, N.MCMC=2000, 
+  alpha.lambda=1, beta.lambda=1,
  prior.shape.alpha.p=1, prior.rate.alpha.p=0.1,
  prior.shape.beta.p=1, prior.rate.beta.p=0.1,
  prior.shape.alpha.psi=1, prior.rate.alpha.psi=0.1,
  prior.shape.beta.psi=1, prior.rate.beta.psi=0.1,
-			alpha.psi.tune=tune, beta.psi.tune=tune,
+			alpha.psi.tune=tune.psi, beta.psi.tune=tune.psi,
 			alpha.p.tune=tune, beta.p.tune=tune)
 
 out2B <- more.mcmc(out2, 3000)
 #
 
+
+
+###
+### test on real data- Dorazio et al. Ecology paper
+###
+
+bbDat <- read.table("breedingBirdData.txt", header=T, sep=",")
+head(bbDat)  # they estimate 93 species total
+butterflies <- read.table("butterflyData.txt", header=T, sep=",")
+head(butterflies)  # they estimate 28 species total
+
+in.dat <- butterflies  # bbDat
+y <- as.matrix(in.dat)
+n <- dim(in.dat)[1]
+J <- dim(in.dat)[2]
+K <- 11
+nzeroes <- 100
+
+tune <- 0.3
+tune.psi <- 0.1
+source("multispp.occu.simple.mcmc_LessIndexing.R")
+out <- multispp.occu.simple.mcmc(y, K, N=93, N.MCMC=500,
+			alpha.psi.tune=tune, beta.psi.tune=tune,
+			alpha.p.tune=tune, beta.p.tune=tune)
+out2 <- multispp.occu.simple.mcmc(y, K,  N=93, N.MCMC=5000, 
+  alpha.lambda=1, beta.lambda=1,
+ prior.shape.alpha.p=2, prior.rate.alpha.p=0.5,
+ prior.shape.beta.p=2, prior.rate.beta.p=0.5,
+ prior.shape.alpha.psi=2, prior.rate.alpha.psi=0.5,
+ prior.shape.beta.psi=2, prior.rate.beta.psi=0.5,
+			alpha.psi.tune=tune.psi, beta.psi.tune=tune.psi,
+			alpha.p.tune=tune, beta.p.tune=tune)
 
 
 
@@ -93,10 +131,6 @@ out2 <- multispp.occu.simple.mcmc(real.y, J, n.mcmc=10000,
 			
 out2B <- more.mcmc(out2, 5000)
 
-
-
-lambda.tilde.num <- (out2$lambda * out2$psi ^ apply(out2$z, 2, sum, na.rm=T) * (1-out2$psi) ^ (apply(1-out2$z, 2, sum, na.rm=T)) )
-summary(lambda.tilde.num)
 
 ###
 ### test on real data- Swiss BBS
