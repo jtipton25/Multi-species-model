@@ -1,0 +1,204 @@
+\documentclass[fleqn]{article}
+\setlength{\topmargin}{0in} \setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in} \setlength{\headheight}{0in}
+\setlength{\headsep}{0in} \setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\mathindent}{0pt}
+
+\usepackage[fleqn]{amsmath}
+\usepackage{dsfont}
+\usepackage{graphicx}
+\usepackage{url}
+%\usepackage{chicago}
+\usepackage{natbib}
+\def\bm#1{\mbox{\boldmath $#1$}}
+ 
+\title{Multispecies Model}
+\author{Kristin Broms, Viviana Ruiz-Guiterrez, John Tipton}
+\date{\today}
+%
+\begin{document}
+%
+\maketitle
+%
+\section{Introduction and motivation}
+%
+\section{Model of one season detection}
+%
+\subsection{Modelling assumptions}
+%
+\begin{itemize}
+  \item There is an ecological motivation for the detection probabilities, the $\bm{p}$, coming from a common distribution and the ocucpancy probabilities, the $\bm{\Psi}$, coming from a common distribution
+  \item There is no heterogeneity in unobserved covariates for $\bm{p}$ and $\bm{\Psi}$
+  \item All species are "theoretically" available to be sampled
+  \item No seasonality
+  \item Closed populations within the $K$ visits
+  \item The actual number of species, $N$, lies between the observed number of species $n$ and the number of augmented species $\Omega$
+\end{itemize}
+%
+\subsection{Data model}
+%
+For $j = 1, \ldots, J$ sites,  $i = 1, \ldots, N$ `actual' species (out of a total of $\Omega$ species), and for $k = 1, \ldots, K$ revisits at each site
+%
+\begin{align*}
+  y_{ij} & = 
+    \begin{cases}
+      0 & \mbox{if } Z_{ij} = 0\\
+      \mbox{Binom}(K, p_i) & \mbox{if } Z_{ij} = 1\\
+    \end{cases}
+\end{align*}
+%
+where $y_{ij}$ is the number of times that species $i$ is seen at site $j$ during $K$ visits, $Z_{ij}$ is an indicator of presence or absence of species $i$ at site $j$, and $p_i$ is the detection probability for species $i$.
+%
+\subsection{Process}
+%
+\begin{align*}
+  Z_{ij} & = 
+  \begin{cases}
+    0 & \mbox{if } W_i = 0\\
+    \mbox{Bern}(\Psi_i) & \mbox{if } W_i = 1\\
+  \end{cases}\\
+  p_i & \sim \mbox{Beta}(\alpha_p, \beta_p)\\
+  \Psi_i & \sim \mbox{Beta}(\alpha_\Psi, \beta_\Psi)\\
+  W_i & \sim \mbox{Bern}(\lambda)\\
+\end{align*}
+%
+where $W_i$ is an indicator of whether a species exists or not in the population;  $\sum_{i = 1}^\Omega W_i = N$ is the species richness; $\bm{\Psi}_i$ is the presence probability for species $i$; and $\lambda$ is the probability of a species being real. 
+%
+\subsection{Parameter}
+%
+\begin{align*}
+  \alpha_p & \sim \mbox{Gamma}(\alpha_{\alpha_p}, \beta_{\alpha_p})\\
+  \beta_p & \sim \mbox{Gamma}(\alpha_{\beta_p}, \beta_{\beta_p})\\
+  \alpha_\Psi & \sim \mbox{Gamma}(\alpha_{\alpha_\Psi}, \beta_{\alpha_\Psi})\\
+  \beta_\Psi & \sim \mbox{Gamma}(\alpha_{\beta_\Psi}, \beta_{\beta_\Psi})\\
+  \lambda & \sim \mbox{Beta}(\alpha_\lambda, \beta_\lambda)\\
+\end{align*}
+%
+\section{Ideas}
+%
+\begin{itemize}
+  \item model $\Psi_k = f(\Psi_{ - i}) +$ randomness and species interaction
+  \item $
+  Z_{ij}  = 
+  \begin{cases}
+    0 & \mbox{if } W_i = 0\\
+    \mbox{Bern}(\Psi_i) & \mbox{if } W_i = 1\\
+  \end{cases}$ where $W_i$ represents "ghost species"
+  \item Let $\Omega$ represent the total number of possible species, $\Omega \geq N \geq n$
+  \item $W_i \sim \mbox{Bern}(\lambda) \Leftrightarrow N \sim \mbox{Binom}(\Omega, \lambda) \Leftrightarrow \sum_{i = 1}^\Omega W_i = N$
+  \item Goal: estimate $\Psi_i$ and predict $N$
+\end{itemize}
+%
+\section{Posterior}
+%
+\begin{multline}
+  [\bm{Z}, \bm{p},  \bm{\Psi}, \bm{W}, \alpha_p, \beta_p, \alpha_\Psi, \beta_\Psi, \lambda | \bm{y}, K]  \propto   \\
+     \left[  \prod_{i = 1}^\Omega     \left[ \prod_{j = 1}^J [y_{ij} | K, p_i]^{Z_{ij}} I\{y_{ij} = 0 \}^{(1 -  Z_{ij})} [Z_{ij} | \Psi_i]^{W_i} I\{Z_{ij} = 0 \}^{(1 -  W_i)} \right]  [p_i | \alpha_p, \beta_p] [\Psi_i | \alpha_\Psi, \beta_\Psi] [W_i | \lambda] \right]     \\
+     \times   [\alpha_p] [\beta_p] [\alpha_\Psi] [\beta_\Psi] [\lambda]
+\end{multline}
+%
+\section{Full conditionals}
+%
+\subsection{$Z_{ij}$}
+%
+For $W_{i} = 0$, $Z_{ij} = 0$.\\
+\\
+For $y_{ij} \geq 1$, $Z_{ij} = 1$.\\
+\\
+For $y_{ij} = 0$ and $W_i = 1$:
+\begin{align*}
+  [Z_{ij} | \cdot] & \propto [y_{ij} | K, p_i]^{Z_{ij}} I \{y_{ij} = 0 \}^{(1 - Z_{ij})} [Z_{ij} | \Psi]^{W_i} I \{Z_{ij} = 0 \}^{(1 - W_{i})}\\
+  & \propto (1 - p_i)^{J Z_{ij}} \Psi_i^{Z_{ij} W_i} (1 - \Psi_i)^{(1 - Z_{ij}) W_i}\\
+  & \propto \left( (1 - p_i)^K \Psi_i \right)^{Z_{ij}} \left(1 - \Psi_i \right)^{(1 - Z_{ij})}\\
+\end{align*}
+which is Bern($\tilde{\Psi}_i$) where $\tilde{\Psi}_i = \left( (1 - p_i)^K \Psi_i \right) / \left( (1 - p_i)^K \Psi_i + (1 - \Psi_i)\right)$\\
+\\
+%
+%
+\subsection{$p_i$}
+%
+\begin{align*}
+  [p_i | \cdot] & \propto \prod_{j = 1}^J [y_{ij} | K, p_i]^{Z_{ij}} [p_i | \alpha_p, \beta_p]\\
+  & \propto \prod_{j = 1}^J \left( p_i^{y_{ij}} (1 - p_i)^{K - y_{ij}} \right)^{Z_{ij}} p_i^{(\alpha_p - 1)} (1 - p_i)^{(\beta_p - 1)}\\
+    & \propto p_i^{\left( \alpha_p - 1 + \sum_{j = 1}^J y_{ij} Z_{ij} \right)} (1 - p_i)^{\left( \beta_p - 1 + \sum_{j = 1}^J Z_{ij} (K - y_{ij}) \right)}
+\end{align*}
+%
+which is Beta($\alpha_p + \sum_{j = 1}^J y_{ij} Z_{ij}, \beta_p + \sum_{j = 1}^J Z_{ij} (K - y_{ij})$)
+%
+%
+%
+\subsection{$\Psi_i$}
+%
+\begin{align*}
+  [\Psi_i | \cdot] & \propto \prod_{j = 1}^J [Z_{ij} | \Psi_i]^{W_i} [\Psi_i | \alpha_\Psi, \beta_\Psi]\\
+  & \propto  \left(  \prod_{j = 1}^J  \Psi_{i}^{Z_{ij}} (1 - \Psi_i)^{(1 - Z_{ij})} \right) ^{W_i} \Psi_i^{(\alpha_\Psi - 1)} (1 - \Psi_i)^{(\beta_\Psi - 1)}\\
+  & \propto \Psi_{ij}^{(\alpha_\Psi - 1 + W_i \sum_{j = 1}^J Z_{ij})} (1 - \Psi_i)^{(\beta_\Psi - 1 + W_i \sum_{j = 1}^J (1 - Z_{ij}))}
+\end{align*}
+which is Beta($\alpha_\Psi + W_i \sum_{j = 1}^J Z_{ij}, \mbox{ } \beta_\Psi + W_i \sum_{j = 1}^J (1 - Z_{ij}))$
+%
+%
+%
+\subsection{$W_i$}
+%
+%Only sample for $\sum_{j = 1}^{J} y_{ij} = 0$.\\
+If $\sum_{j = 1}^J Z_{ij} > 0$, then $W_k=1$.  So only sample for $\sum_{j = 1}^J Z_{ij} = 0$.
+%
+\begin{align*}
+  [W_i | \cdot] & \propto \prod_{j = 1}^J [Z_{ij} | \Psi_i]^{W_i} [W_i | \lambda]\\
+  & \propto \left( \prod_{j = 1}^J \Psi_i^{(Z_{ij} W_i)} (1 - \Psi_i)^{\left( (1 - Z_{ij}) W_i \right)} \right) \lambda^{W_i} (1 - \lambda)^{(1 - W_i)}\\
+  & \propto  \left(  \Psi_i^{\sum_{j = 1}^J Z_{ij} } (1 - \Psi_i)^{\sum_{j = 1}^J(1 - Z_{ij})} \lambda \right)^{W_i} (1 - \lambda)^{(1 - W_i)}\\
+\end{align*}
+%
+which is Bern($\tilde{\lambda}$) where $\tilde{\lambda} = \left((1 - \Psi_i)^J  \lambda \right) / \left( (1 - \Psi_i)^J  \lambda + (1 - \lambda) \right)$
+%
+%
+%
+\subsection{$\alpha_p$}
+%
+\begin{align*}
+  [\alpha_p | \cdot] & \propto \prod_{i = 1}^\Omega [p_i | \alpha_p, \beta_p] [\alpha_p]
+\end{align*}
+where $[p_i | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\alpha_p]$ is Gamma($\alpha_{\alpha_p}, \beta_{\alpha_p}$). This can be sampled using Metropolis-Hastings
+%
+%
+%
+\subsection{$\beta_p$}
+%
+\begin{align*}
+  [\beta_p | \cdot] & \propto \prod_{i = 1}^\Omega [p_i | \alpha_p, \beta_p] [\beta_p] 
+\end{align*}
+where $[p_i | \alpha_p, \beta_p]$ is Beta($\alpha_p, \beta_p$) and $[\beta_p]$ is Gamma($\alpha_{\beta_p}, \beta_{\beta_p}$). This can be sampled using Metropolis-Hastings
+%
+%
+%
+\subsection{$\alpha_\Psi$}
+%
+\begin{align*}
+  [\alpha_\Psi | \cdot] & \propto \prod_{i = 1}^\Omega [\Psi_i | \alpha_\Psi, \beta_\Psi] [\alpha_\Psi] 
+\end{align*}
+where $[\Psi_i | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) and $[\alpha_\Psi]$ is Gamma($\alpha_{\alpha_\Psi}, \beta_{\alpha_\Psi}$). This can be sampled using Metropolis-Hastings
+%
+%
+%
+\subsection{$\beta_\Psi$}
+%
+\begin{align*}
+  [\beta_\Psi | \cdot] & \propto \prod_{i = 1}^\Omega [\Psi_i | \alpha_\Psi, \beta_\Psi] [\beta_\Psi] 
+\end{align*}
+where $[\Psi_i | \alpha_\Psi, \beta_\Psi]$ is Beta($\alpha_\Psi, \beta_\Psi$) and $[\beta_\Psi]$ is Gamma($\alpha_{\beta_\Psi}, \beta_{\beta_\Psi}$). This can be sampled using Metropolis-Hastings
+%
+\subsection{$\lambda$}
+%
+\begin{align*}
+  [\lambda | \cdot ] & \propto \prod_{i = 1}^\Omega [W_i | \lambda] [\lambda]\\
+  & \propto  \prod_{i = 1}^\Omega \lambda^{W_i} (1 - \lambda)^{(1 - W_i)} \lambda^{(\alpha_\lambda - 1)} (1 - \lambda)^{(\beta_\lambda - 1)}\\
+\end{align*}
+%
+which is Beta($\alpha_\lambda + \sum_{i = 1}^\Omega W_i, \beta_\lambda + \sum_{i = 1}^\Omega (1 - W_i)$)
+%
+\section{Next Steps}
+\begin{itemize}
+  \item Include a probit link function.
+\end{itemize}
+\end{document}
