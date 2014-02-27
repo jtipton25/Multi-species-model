@@ -4,7 +4,7 @@
 ## Created 1.17.2014 John Tipton
 ##
 
-mcmcMS <- function(Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p.tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init){ # Y is a matrix of binomial counts
+mcmcMS <- function(Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init){ # Y is a matrix of binomial counts
 	
 	##
 	## libraries and functions
@@ -123,6 +123,7 @@ mcmcMS <- function(Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.
 	  	mh2.p <- sum(dbeta(p, alpha.p, beta.p, log = TRUE)) + dgamma(alpha.p, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p, alpha.beta.p, beta.beta.p, log = TRUE)
 # 		  mh2.p <- sum(dbeta(p[W1], alpha.p, beta.p, log = TRUE)) + dgamma(alpha.p, alpha.alpha.p, beta.alpha.p, log = TRUE) + dgamma(beta.p, alpha.beta.p, beta.beta.p, log = TRUE)
   		mh.p <- exp(mh1.p - mh2.p)
+browser()
 		  if(mh.p > runif(1)){
 	  		alpha.p <- alpha.p.star
   			beta.p <- beta.p.star
@@ -144,6 +145,7 @@ mcmcMS <- function(Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.
   	  mh2.psi <- sum(dbeta(psi, alpha.psi, beta.psi, log = TRUE)) + dgamma(alpha.psi, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi, alpha.beta.psi, beta.beta.psi, log = TRUE)
 #       mh2.psi <- sum(dbeta(psi[W1], alpha.psi, beta.psi, log = TRUE)) + dgamma(alpha.psi, alpha.alpha.psi, beta.alpha.psi, log = TRUE) + dgamma(beta.psi, alpha.beta.psi, beta.beta.psi, log = TRUE)
   		mh.psi <- exp(mh1.psi - mh2.psi)
+      browser()
 		  if(mh.psi > runif(1)){
 	  		alpha.psi <- alpha.psi.star
   			beta.psi <- beta.psi.star

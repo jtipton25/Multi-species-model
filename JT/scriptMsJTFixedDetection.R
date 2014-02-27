@@ -17,7 +17,7 @@ setwd('~/Multi-species-model/JT/')
 
 source('make.plot.R')
 source('simMsJT.R')
-source('mcmcMsJT.R')
+source('mcmcMsJTFixedDetection.R')
 
 ##
 ## Initialize simulation parameters
@@ -57,32 +57,32 @@ curve(dbeta(x, alpha.psi, beta.psi), add = TRUE, col = 'red')
 
 #alpha.psi <- 5
 sigma.squared.alpha.psi.tune <- 0.01
-alpha.alpha.psi <- 0.1#10
-beta.alpha.psi <- 0.1#2
+alpha.alpha.psi <- 1#10
+beta.alpha.psi <- 1#2
 curve(dgamma(x, alpha.alpha.psi, beta.alpha.psi), from = 0, to = 10)
 abline(v = alpha.psi, col = 'red')
 
 #beta.psi <- 6
 sigma.squared.beta.psi.tune <- 0.01
-alpha.beta.psi <- 0.1#12
-beta.beta.psi <- 0.1#2
+alpha.beta.psi <- 1#12
+beta.beta.psi <- 1#2
 curve(dgamma(x, alpha.beta.psi, beta.beta.psi), from = 0, to = 10)
 abline(v = beta.psi, col = 'red')
 
 #alpha.p <- 1.5
-sigma.squared.alpha.p.tune <- 0.01
-alpha.alpha.p <- 0.1#6
-beta.alpha.p <- 0.1#3
-curve(dgamma(x, alpha.alpha.p, beta.alpha.p), from = 0, to = 10)
-abline(v = alpha.p, col = 'red')
-
+# sigma.squared.alpha.p.tune <- 0.01
+# alpha.alpha.p <- 0.1#6
+# beta.alpha.p <- 0.1#3
+# curve(dgamma(x, alpha.alpha.p, beta.alpha.p), from = 0, to = 10)
+# abline(v = alpha.p, col = 'red')
+# 
 #beta.p <- 8
-sigma.squared.beta.p.tune <- 0.01
-alpha.beta.p <- 0.1#2#16
-beta.beta.p <- 0.1#1#2
-curve(dgamma(x, alpha.beta.p, beta.beta.p), from = 0, to = 12)
-abline(v = beta.p, col = 'red')
-
+# sigma.squared.beta.p.tune <- 0.01
+# alpha.beta.p <- 0.1#16
+# beta.beta.p <- 0.1#2
+# curve(dgamma(x, alpha.beta.p, beta.beta.p), from = 0, to = 12)
+# abline(v = beta.p, col = 'red')
+# 
 
 n.aug <- 250
 
@@ -98,14 +98,16 @@ abline(v = (N - dim(data$Y)[2]) / n.aug, col = 'red')
 
 n.mcmc <- 20000
 n.burn <- floor(n.mcmc / 5) + 1
-alpha.p.tune <- 0.05
-beta.p.tune <- 0.05
+# alpha.p.tune <- 0.05
+# beta.p.tune <- 0.05
 alpha.psi.tune <- 0.15
 beta.psi.tune <- 0.15
 Z.init <- 0.005
 
 start <- Sys.time()
-out <- mcmcMS(data$Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p.tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init)
+out <- mcmcMS(data$Y, J, n.aug, alpha.p, beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init)
+# out <- mcmcMS(t(X), J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.beta.p, alpha.alpha.psi, alpha.beta.psi, beta.alpha.psi, beta.beta.psi, alpha.lambda, beta.lambda, alpha.p.tune, beta.p,tune, alpha.psi.tune, beta.psi.tune, n.mcmc, Z.init)
+ 
 finish <- Sys.time() - start
 finish
 
@@ -115,13 +117,4 @@ N
 make.plot(out) ## seems to be biased large...
 names(out)
 
-## Plot of Priors
-alpha.p.prior <- rgamma(1000, alpha.alpha.p, beta.alpha.p)
-beta.p.prior <- rgamma(1000, alpha.beta.p, beta.beta.p)
-alpha.psi.prior <- rgamma(1000, alpha.alpha.psi, beta.alpha.psi)
-beta.psi.prior <- rgamma(1000, alpha.beta.psi, beta.beta.psi)
-p.prior <- rbeta(1000, alpha.p.prior, beta.p.prior) 
-psi.prior <- rbeta(1000, alpha.psi.prior, beta.psi.prior)
-layout(matrix(1:2, ncol = 2))
-hist(p.prior)
-hist(psi.prior)
+
