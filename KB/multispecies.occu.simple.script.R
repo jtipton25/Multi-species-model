@@ -2,7 +2,7 @@
 # Multi-species Occupancy model: Simulation and model test.
 
 
-setwd("/Users/broms/Dropbox/HootenClass_Fall2013/ZIP_and_Occupancy/MultispeciesModels")
+setwd("~/Dropbox/HootenClass_Fall2013/ZIP_and_Occupancy/MultispeciesModels")
 
 ###
 ### Simulate the data.
