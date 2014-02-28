@@ -78,7 +78,8 @@ mcmcMS <- function(Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.
 		## Sample W
 		##  
 		
-		lambda.tilde <- rep(((1 - psi)^n * lambda) / ((1 - psi)^n * lambda + (1 - lambda)), n)
+# 		lambda.tilde <- rep(((1 - psi)^n * lambda) / ((1 - psi)^n * lambda + (1 - lambda)), n)
+    lambda.tilde <- ((1 - psi)^n * lambda) / ((1 - psi)^n * lambda + (1 - lambda))
 		W[Y0 & (sumZ > 0)] <- 1
 		W[Y0 & (sumZ == 0)] <- rbinom(sum(Y0 & (sumZ == 0)), 1, lambda.tilde[Y0 & (sumZ == 0)])
 		W1 <- W == 1
@@ -92,9 +93,6 @@ mcmcMS <- function(Y, J, n.aug, alpha.alpha.p, beta.alpha.p, alpha.beta.p, beta.
 		psi.tilde <- matrix(rep(((1 - p)^J * psi) / ((1 - p)^J * psi + (1 - psi)), n), nrow = n, ncol = Omega, byrow = TRUE)[Yaug0 & W.mat]
 		Z[Yaug0 & !W.mat] <- 0
 		Z[Yaug0 & W.mat] <- rbinom(sum(Yaug0 & W.mat), 1, psi.tilde)
-		#     psi.tilde <- matrix(rep(((1 - p)^J * psi) / ((1 - p)^J * psi + (1 - psi)), n), nrow = n, ncol = Omega, byrow = TRUE)[Yaug0 & !W.mat]
-		#     Z[Yaug0 & W.mat] <- 0
-		#     Z[Yaug0 & !W.mat] <- rbinom(sum(Yaug0 & !W.mat), 1, psi.tilde)
 		sumZ <- apply(Z, 2, sum)
 		
 		## 

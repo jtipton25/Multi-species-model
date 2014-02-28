@@ -7,7 +7,8 @@ library(R2jags)
 ?bugs2jags
 
 getwd()
-setwd("/Users/broms/Dropbox/HootenClass_Fall2013/ZIP_and_Occupancy/MultispeciesModels")
+# setwd("/Users/broms/Dropbox/HootenClass_Fall2013/ZIP_and_Occupancy/MultispeciesModels")
+setwd('~/Multi-species-model/KB/')
 
 bbDat <- read.table("breedingBirdData.txt", header=T, sep=",")
 head(bbDat)
@@ -100,7 +101,7 @@ print(out.update, 2)
 
 library(boot)
 
-sigma.u <- 1.2
+sigma.u <- 1.2a
 ( p.bar <- 0.8 ) # runif(1, 0, 1) )
 ( alpha <- logit(p.bar) )
 ( sigma.u <- runif(1, 0.5, 5) )
