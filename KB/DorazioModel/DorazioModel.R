@@ -64,8 +64,7 @@ DorazioModel <- function() {
 	# LIKELIHOOD
 	for (i in 1:(n+nzeroes)) {
 		w[i] ~ dbern(omega)
-		phi[i] ~ dnorm(alpha, tau.u)
-		
+		phi[i] ~ dnorm(alpha, tau.u)		
 		mu.eta[i] <- beta + (rho * sigma.v/sigma.u) * (psi[i] - alpha)  #** should be phi????
 		eta[i] ~ dnorm(mu.eta[i], var.eta)
 		
@@ -78,8 +77,7 @@ DorazioModel <- function() {
 			mu.theta[i, j] <- theta[i] * Z[i, j]
 			X[i, j] ~ dbin(mu.theta[i,j], K)
 		}
-	}
-	
+	}	
 	n0 <- sum( w[(n+1):(n+nzeroes)])
 	N <- n + n0
 }

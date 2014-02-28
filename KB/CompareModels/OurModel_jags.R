@@ -55,13 +55,11 @@ OurModel <- function() {
 		mu.psi[i] <- psi[i] * w[i]
 							
 		for (j in 1:J) {
-
 			Z[i, j] ~ dbern(mu.psi[i])
 			mu.theta[i, j] <- p[i] * Z[i, j]
 			X[i, j] ~ dbin(mu.theta[i,j], K)
 		}
-	}
-	
+	}	
 	n0 <- sum( w[(n+1):(n+nzeroes)])
 	N <- n + n0
 }
@@ -97,8 +95,7 @@ OurModel_fixed <- function() {
 			mu.theta[i, j] <- p[i] * Z[i, j]
 			X[i, j] ~ dbin(mu.theta[i,j], K)
 		}
-	}
-	
+	}	
 	n0 <- sum( w[(n+1):(n+nzeroes)])
 	N <- n + n0
 }

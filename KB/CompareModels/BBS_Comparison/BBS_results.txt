@@ -1,0 +1,91 @@
+Inference for Bugs model at "/var/folders/pt/stqg3fw92n91jdr38qy7mymr0000gn/T//Rtmp33vdha/model10570f5b48b.txt", fit using jags,
+ 2 chains, each with 10000 iterations (first 1000 discarded), n.thin = 2
+ n.sims = 9000 iterations saved
+           mu.vect sd.vect    2.5%     25%     50%     75%   97.5% Rhat n.eff
+N            85.47    5.80   77.00   81.00   84.00   89.00  100.00 1.03    91
+omega         0.49    0.05    0.40    0.45    0.49    0.52    0.59 1.01   180
+psi.mean      0.24    0.06    0.12    0.20    0.24    0.28    0.37 1.10    23
+rho           0.96    0.05    0.82    0.95    0.97    0.98    0.99 1.20    89
+sigma.u       2.08    0.28    1.58    1.88    2.06    2.26    2.69 1.00   790
+sigma.v       2.79    0.72    1.36    2.32    2.79    3.26    4.21 1.03   780
+theta.mean    0.02    0.01    0.00    0.01    0.02    0.02    0.05 1.01   150
+deviance   7325.64   55.98 7217.28 7287.82 7325.28 7362.65 7437.74 1.00  9000
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD = 1566.9 and DIC = 8892.5
+DIC is an estimate of expected predictive error (lower deviance is better).
+
+
+
+
+Inference for Bugs model at "/var/folders/pt/stqg3fw92n91jdr38qy7mymr0000gn/T//Rtmp33vdha/model105781f0e1f.txt", fit using jags,
+ 2 chains, each with 10000 iterations (first 1000 discarded), n.thin = 2
+ n.sims = 9000 iterations saved
+          mu.vect sd.vect    2.5%     25%     50%     75%   97.5% Rhat n.eff
+N           87.61    7.39   78.00   82.00   86.00   91.00  106.00 1.08    27
+lambda       0.50    0.06    0.40    0.46    0.50    0.53    0.62 1.04    49
+p.alpha      0.84    0.27    0.35    0.64    0.82    1.02    1.41 1.24    11
+p.beta       6.18    1.67    3.23    5.01    6.05    7.23    9.78 1.17    14
+psi.alpha    0.79    0.24    0.40    0.62    0.76    0.94    1.33 1.03    75
+psi.beta     1.23    0.26    0.79    1.05    1.21    1.40    1.80 1.00  1400
+deviance  7340.54   55.48 7232.05 7302.65 7340.63 7377.43 7449.72 1.00  2400
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD = 1538.4 and DIC = 8878.9
+DIC is an estimate of expected predictive error (lower deviance is better).
+
+
+
+
+Inference for Bugs model at "/var/folders/pt/stqg3fw92n91jdr38qy7mymr0000gn/T//Rtmp33vdha/model10527ad76aa.txt", fit using jags,
+ 2 chains, each with 10000 iterations (first 1000 discarded), n.thin = 2
+ n.sims = 9000 iterations saved
+         mu.vect sd.vect    2.5%     25%     50%     75%   97.5% Rhat n.eff
+N          77.31    1.52   75.00   76.00   77.00   78.00   81.00    1  9000
+lambda      0.44    0.04    0.37    0.42    0.44    0.47    0.52    1  6200
+deviance 7327.52   55.65 7219.50 7289.85 7326.83 7364.75 7439.45    1  4800
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD = 1548.2 and DIC = 8875.7
+DIC is an estimate of expected predictive error (lower deviance is better).
+
+
+
+
+
+
+
+
+
+  Run times:  
+                   [,1]   [,2]     [,3]
+Dorazio         276.380  0.922  275.806
+JAGS            271.993  0.810  270.680
+FixedJAGS       217.983  0.678  216.904
+Broms           994.136 27.191 1117.228
+Broms_uniformP  981.920 20.475 1005.798
+Broms_informedP 962.347 18.929 3923.295
+Tipton               NA     NA       NA
+
+
+
+
+
+  Spp Richness with CI's:  
+                [,1] [,2] [,3]
+Dorazio           77   84  100
+JAGS              78   86  106
+FixedJAGS         75   77   81
+Broms             78   85   99
+Broms_uniformP    77   85  104
+Broms_informedP   77   85  104
+Tipton            NA   NA   NA

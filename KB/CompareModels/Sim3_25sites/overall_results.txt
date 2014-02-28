@@ -1,0 +1,127 @@
+True species is  100 . 
+ But 'Realized N' is  100 .  
+Observed species is  89 . 
+ALPHA.p=   1 ,  BETA.p=  8 
+ALPHA.psi=   6 ,  BETA.psi=  2 
+Broms model, all random effects.  
+ 
+100  200  300  400  500  600  700  800  900  1000  1100  1200  1300  1400  1500  1600  1700  1800  1900  2000  2100  2200  2300  2400  2500  2600  2700  2800  2900  3000  3100  3200  3300  3400  3500  3600  3700  3800  3900  4000  4100  4200  4300  4400  4500  4600  4700  4800  4900  5000  5100  5200  5300  5400  5500  5600  5700  5800  5900  6000  6100  6200  6300  6400  6500  6600  6700  6800  6900  7000  7100  7200  7300  7400  7500  7600  7700  7800  7900  8000  8100  8200  8300  8400  8500  8600  8700  8800  8900  9000  9100  9200  9300  9400  9500  9600  9700  9800  9900  10000  10100  10200  10300  10400  10500  10600  10700  10800  10900  11000  11100  11200  11300  11400  11500  11600  11700  11800  11900  12000  12100  12200  12300  12400  12500  12600  12700  12800  12900  13000  13100  13200  13300  13400  13500  13600  13700  13800  13900  14000  14100  14200  14300  14400  14500  14600  14700  14800  14900  15000  15100  15200  15300  15400  15500  15600  15700  15800  15900  16000  16100  16200  16300  16400  16500  16600  16700  16800  16900  17000  17100  Timing stopped at: 549.138 4.191 555.213 
+
+ 
+ 
+ Broms model, fixed p with uniform prior.  
+ 
+100  200  300  400  500  600  700  800  900  1000  1100  1200  1300  1400  1500  1600  1700  1800  1900  2000  2100  2200  2300  2400  2500  2600  2700  2800  2900  3000  3100  3200  3300  3400  3500  3600  3700  3800  3900  4000  4100  4200  4300  4400  4500  4600  4700  4800  4900  5000  5100  5200  5300  5400  5500  5600  5700  5800  5900  6000  6100  6200  6300  6400  6500  6600  6700  6800  6900  7000  7100  7200  7300  7400  7500  7600  7700  7800  7900  8000  8100  8200  8300  8400  8500  8600  8700  8800  8900  9000  9100  9200  9300  9400  9500  9600  9700  9800  9900  10000  10100  10200  10300  10400  10500  10600  10700  10800  10900  11000  11100  11200  11300  11400  11500  11600  11700  11800  11900  12000  12100  12200  12300  12400  12500  12600  12700  12800  12900  13000  13100  13200  13300  13400  13500  13600  13700  13800  13900  14000  14100  14200  14300  14400  14500  14600  14700  14800  14900  15000  15100  15200  15300  15400  15500  15600  15700  15800  15900  16000  16100  16200  16300  16400  16500  16600  16700  16800  16900  17000  17100  17200  17300  17400  17500  17600  17700  17800  17900  18000  18100  18200  18300  18400  18500  18600  18700  18800  18900  19000  19100  19200  19300  19400  19500  19600  19700  19800  19900  20000  
+
+ Occupancy prob.:  	 4.04 	 2.67 
+
+ Species richness:   92 97 103
+ Mean:   96.89611
+ Psi acceptance rate: 	 0.7104 2.5%   50% 97.5% 
+   92    97   103 
+
+ 
+ 
+ Broms model, fixed p with informative prior.  
+ 
+100  200  300  400  500  600  700  800  900  1000  1100  1200  1300  1400  1500  1600  1700  1800  1900  2000  2100  2200  2300  2400  2500  2600  2700  2800  2900  3000  3100  3200  3300  3400  3500  3600  3700  3800  3900  4000  4100  4200  4300  4400  4500  4600  4700  4800  4900  5000  5100  5200  5300  5400  5500  5600  5700  5800  5900  6000  6100  6200  6300  6400  6500  6600  6700  6800  6900  7000  7100  7200  7300  7400  7500  7600  7700  7800  7900  8000  8100  8200  8300  8400  8500  8600  8700  8800  8900  9000  9100  9200  9300  9400  9500  9600  9700  9800  9900  10000  10100  10200  10300  10400  10500  10600  10700  10800  10900  11000  11100  11200  11300  11400  11500  11600  11700  11800  11900  12000  12100  12200  12300  12400  12500  12600  12700  12800  12900  13000  13100  13200  13300  13400  13500  13600  13700  13800  13900  14000  14100  14200  14300  14400  14500  14600  14700  14800  14900  15000  15100  15200  15300  15400  15500  15600  15700  15800  15900  16000  16100  16200  16300  16400  16500  16600  16700  16800  16900  17000  17100  17200  17300  17400  17500  17600  17700  17800  17900  18000  18100  18200  18300  18400  18500  18600  18700  18800  18900  19000  19100  19200  19300  19400  19500  19600  19700  19800  19900  20000  
+
+ Occupancy prob.:  	 3.61 	 2.37 
+
+ Species richness:   91 96 104
+ Mean:   96.27911
+ Psi acceptance rate: 	 0.687 2.5%   50% 97.5% 
+   91    96   104 
+
+ Dorazio Model:  
+Inference for Bugs model at "/var/folders/pt/stqg3fw92n91jdr38qy7mymr0000gn/T//Rtmp33vdha/model10514a4865d.txt", fit using jags,
+ 2 chains, each with 10000 iterations (first 1000 discarded), n.thin = 2
+ n.sims = 9000 iterations saved
+           mu.vect sd.vect    2.5%     25%     50%     75%   97.5% Rhat n.eff
+N            96.29    6.63   91.00   93.00   94.00   97.00  117.00 1.03   370
+omega         0.40    0.04    0.34    0.38    0.40    0.43    0.50 1.01   860
+psi.mean      0.72    0.11    0.45    0.66    0.72    0.78    0.94 1.66     5
+rho           0.09    0.55   -0.85   -0.38    0.13    0.58    0.92 1.05    38
+sigma.u       1.25    1.06    0.32    0.51    0.83    1.67    4.59 1.03    64
+sigma.v       0.93    0.30    0.53    0.74    0.86    1.05    1.78 1.05    37
+theta.mean    0.11    0.04    0.04    0.09    0.11    0.13    0.24 1.16    26
+deviance   2779.21   33.35 2711.45 2757.12 2780.04 2802.67 2841.55 1.23    11
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD = 499.8 and DIC = 3279.0
+DIC is an estimate of expected predictive error (lower deviance is better).
+
+
+
+
+
+ JAGS Model:  
+Inference for Bugs model at "/var/folders/pt/stqg3fw92n91jdr38qy7mymr0000gn/T//Rtmp33vdha/model10559c8acea.txt", fit using jags,
+ 2 chains, each with 10000 iterations (first 1000 discarded), n.thin = 2
+ n.sims = 9000 iterations saved
+         mu.vect sd.vect    2.5%     25%     50%     75%   97.5% Rhat n.eff
+N         106.81    4.72   98.00  103.00  107.00  110.00  117.00    1  9000
+lambda      0.45    0.04    0.38    0.42    0.45    0.47    0.52    1  9000
+deviance 2730.35   29.88 2671.28 2710.27 2730.04 2750.28 2790.18    1  9000
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD = 446.3 and DIC = 3176.7
+DIC is an estimate of expected predictive error (lower deviance is better).
+
+
+
+
+
+ JAGS Model, fixed p:  
+Inference for Bugs model at "/var/folders/pt/stqg3fw92n91jdr38qy7mymr0000gn/T//Rtmp33vdha/model10559c8acea.txt", fit using jags,
+ 2 chains, each with 10000 iterations (first 1000 discarded), n.thin = 2
+ n.sims = 9000 iterations saved
+         mu.vect sd.vect    2.5%     25%     50%     75%   97.5% Rhat n.eff
+N         106.81    4.72   98.00  103.00  107.00  110.00  117.00    1  9000
+lambda      0.45    0.04    0.38    0.42    0.45    0.47    0.52    1  9000
+deviance 2730.35   29.88 2671.28 2710.27 2730.04 2750.28 2790.18    1  9000
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD = 446.3 and DIC = 3176.7
+DIC is an estimate of expected predictive error (lower deviance is better).
+
+
+
+
+
+
+
+
+
+  Run times:  
+                   [,1]  [,2]    [,3]
+Dorazio         350.240 1.478 352.279
+JAGS            350.240 1.478 352.279
+FixedJAGS       286.043 1.497 288.772
+Broms           286.043 1.497 288.772
+Broms_uniformP  630.508 5.166 651.328
+Broms_informedP 537.429 3.476 947.157
+Tipton               NA    NA      NA
+
+
+
+
+
+  Spp Richness with CI's:  
+                [,1] [,2] [,3]
+Dorazio           91   94  117
+JAGS              NA   NA   NA
+FixedJAGS         98  107  117
+Broms             NA   NA   NA
+Broms_uniformP    92   97  103
+Broms_informedP   91   96  104
+Tipton            NA   NA   NA
