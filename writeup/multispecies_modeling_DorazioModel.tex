@@ -1,0 +1,123 @@
+\documentclass[fleqn]{article}
+\setlength{\topmargin}{0in} \setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in} \setlength{\headheight}{0in}
+\setlength{\headsep}{0in} \setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\mathindent}{0pt}
+
+\usepackage[fleqn]{amsmath}
+\usepackage{dsfont}
+\usepackage{graphicx}
+\usepackage{url}
+%\usepackage{chicago}
+\usepackage{natbib}
+\def\bm#1{\mbox{\boldmath $#1$}}
+ 
+\title{Dorazio and Royle's Multispecies Model- Mixed Notation}
+\author{Kristin Broms, Viviana Ruiz-Guiterrez, John Tipton}
+\date{\today}
+%
+\begin{document}
+%
+\maketitle
+%
+\section{Model as described in the text}
+%
+For $j = 1, \ldots, J$ sites,  $i = 1, \ldots, N$ `actual' species (out of a total of $\Omega$ species), and for $k = 1, \ldots, K$ revisits at each site
+%
+%
+\begin{align*}
+  y_{ij} & \sim \mbox{Binom} (K, p_iZ_{ij}) \\
+  Z_{ij} & \sim \mbox{Bern} (\Psi_iw_i) \\
+  W_i & \sim \mbox{Bern} (\lambda) \\
+  \mbox{logit} (\Psi_i) &= u_i + \alpha \\
+    \mbox{logit} (p_i) & = v_i + \beta \\
+  \begin{pmatrix}
+     \bf{u} \\
+     \bf{v} 
+\end{pmatrix}
+& \sim N\left( \bf{0}, \begin{bmatrix}  \sigma_u^2 & \rho\sigma_u\sigma_v \\
+                                                                 \rho\sigma_u\sigma_v  & \sigma_v^2  \end{bmatrix}  \right)  \\
+ \end{align*}
+%
+where $y_{ij}$ is the number of times that species $i$ is seen at site $j$ during $K$ visits, $Z_{ij}$ is an indicator of presence or absence of species $i$ at site $j$, and $p_i$ is the detection probability for species $i$.  $W_i$ is an indicator of whether a species exists or not in the population;  $\sum_{i = 1}^\Omega W_i = N$ is the species richness; $\Psi_i$ is the presence probability for species $i$; and $\lambda$ is the probability of a species being real. $\alpha$ and $\beta$ represent the average occupancy and detection probabilities, respectively, for the population; $u_i$ and $v_i$ are the species-specific variances around those averages.
+
+
+Note:  in the code, they specify the multivariate distribution slightly differently:
+%
+\begin{align*}
+  \begin{pmatrix}
+     \bf{u} \\
+     \bf{v} 
+\end{pmatrix}
+& \sim N\left( \begin{bmatrix} \alpha \\ \beta  \end{bmatrix} , \begin{bmatrix}  \sigma_u^2 & \rho\sigma_u\sigma_v \\
+                                                                 \rho\sigma_u\sigma_v  & \sigma_v^2  \end{bmatrix}  \right)
+\end{align*}
+%
+%
+The priors are essentially:
+\begin{align*}
+  \mbox{logit}^{-1} (\alpha) & \sim U(0, 1)  \\
+  \mbox{logit}^{-1} (\beta) & \sim U(0, 1)  \\
+  \lambda & \sim U(0,1)  \\
+  \rho & \sim U(-1, 1)  \\
+  \sigma_u^2 & \sim 1 / \mbox{Gamma}(0.1, 0.1)  \\
+  \sigma_v^2 & \sim 1 / \mbox{Gamma}(0.1, 0.1)  \\
+\end{align*} 
+ %
+ % 
+
+\section{Model as written in WinBUGS}
+%
+\subsection{Interlude}
+%
+When they code the model, they use the marginal and conditional distributions for $\bf{u}$ and $\bf{v}$, respectively:
+\begin{align*}
+  [u, v] & = [v|u][u]  \\
+  [v | u] & = N \left(\beta + \rho \left( \frac{\sigma_v}{\sigma_u} \right) \left(\Psi_i - \alpha \right), \left( 1 - \rho^2 \right) \sigma_v^2 \right) \\
+  [u] & = N \left(\alpha, \sigma_u^2 \right) \\
+\end{align*}
+%
+
+(********** The code has $\Psi_i$ in the equation, but it should be $v_i$, right?)
+%
+%
+\subsection{BUGS model}
+%
+%
+For $j = 1, \ldots, J$ sites,  $i = 1, \ldots, N$ `actual' species (out of a total of $\Omega$ species), and for $k = 1, \ldots, K$ revisits at each site:
+
+%
+%
+\begin{align*}
+  y_{ij} & \sim \mbox{Binom} (K, p_iZ_{ij}) \\
+  Z_{ij} & \sim \mbox{Bern} (\Psi_iw_i) \\
+  W_i & \sim \mbox{Bern} (\lambda) \\
+%
+  \mbox{logit} (\Psi_i) & \sim N\left(\alpha, \sigma_u^2 \right) \\
+  %
+  \mbox{logit} (p_i) & \sim N \left( \beta + \rho \left( \frac{\sigma_v}{\sigma_u} \right) \left(\Psi_i - \alpha \right) ,  \left( 1 - \rho^2 \right) \sigma_v^2 \right)   \\
+ %  \mu_{p,i} &= \beta + \rho \left( \frac{\sigma_v}{\sigma_u} \right) \left(\Psi_i - \alpha \right) \\
+ % \sigma_p^2 &= \left( 1 - \rho^2 \right) \sigma_v^2  \\
+ % 
+ \end{align*}
+ 
+ Priors:
+ \begin{align*}
+  \lambda & \sim U(0, 1)  \\
+  \mbox{mean.psi} & \sim U(0, 1)  \\
+  \alpha & = \mbox{logit} (\mbox{mean.psi} )  \\
+ % 
+  \mbox{mean.p} & \sim U(0, 1)  \\
+  \beta &= \mbox{logit} (\mbox{mean.p})  \\
+ % 
+  \sigma_u^2 & \sim 1 / \mbox{Gamma}(0.1, 0.1)  \\
+  \sigma_v^2 & \sim  1/ \mbox{Gamma}(0.1, 0.1)  \\
+  \rho & \sim U(-1, 1)  \\
+%
+\end{align*}
+
+\end{document}
+
+
+
